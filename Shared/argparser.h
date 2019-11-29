@@ -11,6 +11,7 @@ this lib is a parser for arguments recieved from user.
 #endif
 
 #include "hardCodedData.h"
+#include <sys/stat.h>
 
 static const int EXPECTED_ARGC = 2;
 static const char HELPER[1000] = \
@@ -20,7 +21,7 @@ static const char HELPER[1000] = \
 "Output: results will be printed to an output file by the order of calulation. \n"\
 "===========================================================================================\n";
 
-
+int isDirectory(const char *path);
 int ensureArgs(int argc, int expected_argc, char *argv[]);
 int isArgsValid(int argc, char *argv[]);
 void callHelper();

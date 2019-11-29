@@ -39,6 +39,9 @@ static const char ERROR_ID_5_CONTENT[55] = \
 static const char ERROR_ID_6_CONTENT[100] = \
 "Run Time Error: Process was timeout!\n" \
 "Terminating brutally!\n";
+static const char ERROR_ID_7_CONTENT[100] = \
+"Allocation Error: Memory allocation failed!\n" \
+"Terminating brutally!\n";
 
 void raiseError(int error_id, const char *file_path, const char *function_name, int line, const char *description);
 
