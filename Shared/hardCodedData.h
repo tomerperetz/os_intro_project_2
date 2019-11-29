@@ -17,6 +17,9 @@ Hard coded data: includes and defines
 
 //Const That Relevant For All Projects
 static const int ERR = -1;
+static const int ERR_2 = -2;
+static const int ERR_3 = -3;
+static const int IO_ERR = -4;
 static const int EQUAL = 0;
 static const int IS_TRUE = 1;
 static const int IS_FALSE = 0;
