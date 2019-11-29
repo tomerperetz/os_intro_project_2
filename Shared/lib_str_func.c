@@ -5,8 +5,8 @@ This lib contains all functions related to string handeling
 ====================================================================================================================
 */
 
-#include "../Share/lib_errorHandler.h"
-#include "../Share/hardCodedData.h"
+#include "../Shared/lib_errorHandler.h"
+#include "../Shared/hardCodedData.h"
 
 int countOpretors(char *dest_str)
 {

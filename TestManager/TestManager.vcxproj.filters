@@ -21,28 +21,52 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Share\argparser.h">
+    <ClInclude Include="..\Shared\argparser.h">
       <Filter>Shared Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Share\hardCodedData.h">
+    <ClInclude Include="..\Shared\hardCodedData.h">
       <Filter>Shared Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Share\lib_errorHandler.h">
+    <ClInclude Include="..\Shared\lib_errorHandler.h">
       <Filter>Shared Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Share\lib_str_func.h">
+    <ClInclude Include="..\Shared\lib_fileHandler.h">
       <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\lib_osHandler.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\lib_str_func.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="studentManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Share\argparser.c">
+    <ClCompile Include="..\Shared\argparser.c">
       <Filter>Shared Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Share\lib_errorHandler.c">
+    <ClCompile Include="..\Shared\CalcStudentGrades.c">
       <Filter>Shared Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Share\lib_str_func.c">
+    <ClCompile Include="..\Shared\lib_errorHandler.c">
       <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_fileHandler.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_osHandler.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_str_func.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="studentManager.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

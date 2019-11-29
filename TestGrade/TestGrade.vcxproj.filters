@@ -17,32 +17,56 @@
       <UniqueIdentifier>{7de22afe-f97f-45fe-9260-0db1d49b9681}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shared Header Files">
-      <UniqueIdentifier>{f3f9a9db-e757-413d-ad29-eaaba1428290}</UniqueIdentifier>
+      <UniqueIdentifier>{04272eed-251d-438a-b510-e9b4fadc3430}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Share\argparser.h">
-      <Filter>Shared Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Share\hardCodedData.h">
-      <Filter>Shared Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Share\lib_errorHandler.h">
-      <Filter>Shared Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Share\lib_str_func.h">
-      <Filter>Shared Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\argparser.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\CalcStudentGrades.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_errorHandler.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_fileHandler.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_osHandler.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\lib_str_func.c">
+      <Filter>Shared Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="studentGrade.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="studentGrade.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Share\argparser.c">
-      <Filter>Shared Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Share\lib_errorHandler.c">
-      <Filter>Shared Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Share\lib_str_func.c">
-      <Filter>Shared Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="..\Shared\argparser.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\hardCodedData.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\lib_errorHandler.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\lib_fileHandler.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\lib_osHandler.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\lib_str_func.h">
+      <Filter>Shared Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

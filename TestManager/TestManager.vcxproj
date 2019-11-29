@@ -18,6 +18,25 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shared\argparser.h" />
+    <ClInclude Include="..\Shared\hardCodedData.h" />
+    <ClInclude Include="..\Shared\lib_errorHandler.h" />
+    <ClInclude Include="..\Shared\lib_fileHandler.h" />
+    <ClInclude Include="..\Shared\lib_osHandler.h" />
+    <ClInclude Include="..\Shared\lib_str_func.h" />
+    <ClInclude Include="studentManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Shared\argparser.c" />
+    <ClCompile Include="..\Shared\CalcStudentGrades.c" />
+    <ClCompile Include="..\Shared\lib_errorHandler.c" />
+    <ClCompile Include="..\Shared\lib_fileHandler.c" />
+    <ClCompile Include="..\Shared\lib_osHandler.c" />
+    <ClCompile Include="..\Shared\lib_str_func.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="studentManager.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{0ABBD472-D478-4EC3-9D3B-C935C0BA71D3}</ProjectGuid>
@@ -70,7 +89,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir))\..\Share;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir))\..\Shared;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,17 +135,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Share\argparser.h" />
-    <ClInclude Include="..\Share\hardCodedData.h" />
-    <ClInclude Include="..\Share\lib_errorHandler.h" />
-    <ClInclude Include="..\Share\lib_str_func.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Share\argparser.c" />
-    <ClCompile Include="..\Share\lib_errorHandler.c" />
-    <ClCompile Include="..\Share\lib_str_func.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
