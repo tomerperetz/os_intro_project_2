@@ -23,3 +23,5 @@ int getLastIntFromString(char *dest_str, int first_index);
 void replace_sub_string(char *string, int sub_str_start_idx, int sub_str_end_idx, char *new_sub_string);
 
 void add_sub_string_to_string(char dest_str[], char sub_str[], int start_idx);
+
+int strcatDynamic(const char first_source[], const char second_source[], char **buffer);

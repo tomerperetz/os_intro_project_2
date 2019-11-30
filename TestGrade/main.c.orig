@@ -8,6 +8,16 @@
 #include"../Shared/lib_errorHandler.h"
 // Constants -------------------------------------------------------------------
 
+<<<<<<< HEAD
+int main(int argc, char *argv[])
+{
+
+	printf("%s\n", argv[1]);
+
+	return 0;
+}
+
+=======
 #define NUM_THREADS 3
 #define BRUTAL_TERMINATION_CODE 0x55
 #define ERROR_CODE ((int)(-1))
@@ -75,6 +85,7 @@ int main(int argc, char *argv[])
 	initStudentStruct(hw_grades_list, mid_grades_list, final_grades_list, &student_grades_struct);
 
 	analyzeStudent(&student_grades_struct);
+>>>>>>> tomer/calcGrade
 
 	printToFile(argv[1], student_grades_struct.final_course_grade);
 

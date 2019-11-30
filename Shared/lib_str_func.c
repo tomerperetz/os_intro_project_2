@@ -93,7 +93,6 @@ int getLastIntFromString(char *dest_str, int first_index)
 	return int_x;
 }
 
-
 void add_sub_string_to_string(char dest_str[], char sub_str[], int start_idx) {
 
 	/*
@@ -112,7 +111,6 @@ void add_sub_string_to_string(char dest_str[], char sub_str[], int start_idx) {
 
 }
 
-
 void replace_sub_string(char *string, int sub_str_start_idx, int sub_str_end_idx, char *new_sub_string) 
 {
 	/*
@@ -130,4 +128,24 @@ void replace_sub_string(char *string, int sub_str_start_idx, int sub_str_end_idx
 	string[sub_str_start_idx] = END_OF_STR;
 	strcpy_s(string_start, MAX_FATHER_ARG_INPUT_LEN, string);
 	sprintf_s(string, MAX_FATHER_ARG_INPUT_LEN, "%s%s%s", string_start, new_sub_string, string_end);
+}
+
+int strcatDynamic(const char first_source[], const char second_source[], char **buffer)
+{
+	int retVal1 = ERR, retVal2 = ERR, size_of_file_path = 0;
+
+	size_of_file_path = (strlen(first_source) + strlen(second_source) + 1);
+	*buffer = (char*)malloc(sizeof(char)*size_of_file_path);
+	if (*buffer == NULL) {
+		raiseError(7, __FILE__, __func__, __LINE__, ERROR_ID_7_CONTENT);
+		return IS_FALSE;
+	}
+	retVal1 = strcpy_s(*buffer, sizeof(char)*size_of_file_path, first_source);
+	retVal2 = strcat_s(*buffer, sizeof(char)*size_of_file_path, second_source);
+	if (retVal1 != 0 || retVal2 != 0) {
+		raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_9_CONTENT);
+		free(*buffer);
+		return ERR;
+	}
+	return IS_TRUE;
 }
