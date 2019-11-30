@@ -42,6 +42,7 @@ static const char ERROR_ID_6_CONTENT[100] = \
 static const char ERROR_ID_7_CONTENT[100] = \
 "Allocation Error: Memory allocation failed!\n" \
 "Terminating brutally!\n";
-
+static const char ERROR_ID_9_CONTENT[100] = \
+"STRLIB ERROR: Use of one of the functions from the <string.h> directory failed\n";
 void raiseError(int error_id, const char *file_path, const char *function_name, int line, const char *description);
 
