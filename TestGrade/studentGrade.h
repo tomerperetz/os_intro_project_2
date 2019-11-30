@@ -18,3 +18,4 @@ int calcFinalGrade(int hw_grade, int mid_term_exam_grade, int final_exam_grade, 
 int analyzeStudent(student_grades_struct *student_grades_ptr);
 void printStudent(student_grades_struct *student_grades_ptr);
 char** initGradesList(char **user_path);
+void initStudentStruct(int *hw_grades_list, int *mid_grades_list, int *final_grades_list, student_grades_struct *student);

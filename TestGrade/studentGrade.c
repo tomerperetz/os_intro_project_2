@@ -128,7 +128,6 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 	}
 
 	status = getGradesAvg(&(student_grades_ptr->hw_grades_arr), NUM_OF_HW_TO_USE, GRADE_TH, &hw_grade);
-	printf("hw_avg: %d \n", hw_grade);
 	if (status != TRUE)
 	{
 		printf("Error in calculating homework average!");
@@ -136,7 +135,6 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 	}
 
 	status = getFinalExamGrade(student_grades_ptr->final_exam_grades_arr[0], student_grades_ptr->final_exam_grades_arr[1], GRADE_TH, &final_exam_grade);
-	printf("final exam grade: %d \n", final_exam_grade);
 	if (status != TRUE)
 	{
 		printf("Error in getting final exam test!");
@@ -147,7 +145,6 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 	if (mid_exam_grade < 60)
 		mid_exam_grade = 0;
 
-	printf("mid exam grade: %d \n", mid_exam_grade);
 
 	status = calcFinalGrade(hw_grade, mid_exam_grade, final_exam_grade, &(student_grades_ptr->final_course_grade));
 	if (status != TRUE)
@@ -155,6 +152,8 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 		printf("Error in getting final exam test!");
 		return ERR;
 	}
+
+	return TRUE;
 	
 
 }
@@ -175,7 +174,6 @@ void printStudent(student_grades_struct *student_grades_ptr)
 
 	return;
 }
-
 
 char** initGradesList(char **user_path)
 {
@@ -206,20 +204,29 @@ char** initGradesList(char **user_path)
 	}
 
 	// init path list
-	strcat_s(files[0], max_len, "ex01.txt");
-	strcat_s(files[1], max_len, "ex02.txt");
-	strcat_s(files[2], max_len, "ex03.txt");
-	strcat_s(files[3], max_len, "ex04.txt");
-	strcat_s(files[4], max_len, "ex05.txt");
-	strcat_s(files[5], max_len, "ex06.txt");
-	strcat_s(files[6], max_len, "ex07.txt");
-	strcat_s(files[7], max_len, "ex08.txt");
-	strcat_s(files[8], max_len, "ex09.txt");
-	strcat_s(files[9], max_len, "ex10.txt");
-	strcat_s(files[10], max_len, "midterm.txt");
-	strcat_s(files[11], max_len, "moedA.txt");
-	strcat_s(files[12], max_len, "moedB.txt");
+	strcat_s(files[0], max_len, "/ex01.txt");
+	strcat_s(files[1], max_len, "/ex02.txt");
+	strcat_s(files[2], max_len, "/ex03.txt");
+	strcat_s(files[3], max_len, "/ex04.txt");
+	strcat_s(files[4], max_len, "/ex05.txt");
+	strcat_s(files[5], max_len, "/ex06.txt");
+	strcat_s(files[6], max_len, "/ex07.txt");
+	strcat_s(files[7], max_len, "/ex08.txt");
+	strcat_s(files[8], max_len, "/ex09.txt");
+	strcat_s(files[9], max_len, "/ex10.txt");
+	strcat_s(files[10], max_len, "/midterm.txt");
+	strcat_s(files[11], max_len, "/moedA.txt");
+	strcat_s(files[12], max_len, "/moedB.txt");
 
 	return files;
 }
 
+void initStudentStruct(int *hw_grades_list, int *mid_grades_list, int *final_grades_list, student_grades_struct *student)
+{
+	copy_arr(hw_grades_list, student->hw_grades_arr, NUM_OF_HW);
+	copy_arr(mid_grades_list, student->mid_term_grades_arr, NUM_OF_MID_EXAMS);
+	copy_arr(final_grades_list, student->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
+	student->final_course_grade = 0;
+
+	return TRUE;
+}
