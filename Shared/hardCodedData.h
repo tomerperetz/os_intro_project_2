@@ -34,3 +34,7 @@ static const char CLOSE_PARENTHESIS = ')';
 # define MAX_SON_ARG_INPUT_LEN 32
 # define MAX_FATHER_ARG_INPUT_LEN 256
 
+# define MAX_NUM_OF_STUDENTS 10
+# define ID_LEN_STR 12
+# define STUDENT_DIR_NAME_LEN 20
+

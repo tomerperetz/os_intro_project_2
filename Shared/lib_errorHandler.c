@@ -28,5 +28,4 @@ void raiseError(int error_id,const char *file_path, const char *function_name, i
 	printf("Line: %d\n", line);
 	printf("Description: %s\n", description);
 	printf("=====================================================================\n");
-	exit(ERR);
 }

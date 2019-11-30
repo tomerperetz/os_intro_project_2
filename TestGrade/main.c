@@ -17,8 +17,9 @@ static HANDLE CreateThreadSimple(LPTHREAD_START_ROUTINE p_start_routine,
 	LPDWORD p_thread_id);
 
 
-int main()
+int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	HANDLE p_thread_handles[NUM_THREADS];
 	DWORD p_thread_ids[NUM_THREADS];
 	DWORD wait_code;
@@ -70,6 +71,9 @@ int main()
 	printf("score 1: %d", score_1);
 	printf("score 2: %d", score_2);
 
+=======
+	printf("%s\n", argv[1]);
+>>>>>>> almost finished Manager
 	return 0;
 }
 
