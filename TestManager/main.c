@@ -2,7 +2,8 @@
 #include "../Shared/argparser.h"
 #include "../Shared/lib_errorHandler.h"
 #include "../Shared/lib_osHandler.h"
-
+#include "../Shared/lib_str_func.h"
+#include "../Shared/lib_fileHandler.h"
 
 void printLst(char lst[][STUDENT_DIR_NAME_LEN], int lst_size)
 {
@@ -11,25 +12,6 @@ void printLst(char lst[][STUDENT_DIR_NAME_LEN], int lst_size)
 		printf("%s\n", lst[i]);
 	}
 		
-}
-int strcatDynamic(const char first_source[], const char second_source[], char **buffer)
-{
-	int retVal1 = ERR, retVal2 = ERR, size_of_file_path = 0;
-	
-	size_of_file_path = (strlen(first_source) + strlen(second_source)+1);
-	*buffer = (char*) malloc(sizeof(char)*size_of_file_path);
-	if (*buffer == NULL) {
-		raiseError(7, __FILE__, __func__, __LINE__, ERROR_ID_7_CONTENT);
-		return IS_FALSE;
-	}
-	retVal1 = strcpy_s(*buffer, sizeof(char)*size_of_file_path, first_source);
-	retVal2 = strcat_s(*buffer, sizeof(char)*size_of_file_path, second_source);
-	if (retVal1 != 0 || retVal2 != 0) {
-		raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_9_CONTENT);
-		free(*buffer);
-		return ERR;
-	}
-	return IS_TRUE;
 }
 
 int isStudentIdValid(char *id_str)
@@ -75,7 +57,7 @@ int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], char final_lst
 		ret_val1 = strcpy_s(student_dirs[*dir_list_len], STUDENT_DIR_NAME_LEN, grades_prefix);
 		ret_val2 = strcpy_s(final_lst[*dir_list_len], STUDENT_DIR_NAME_LEN, final_prefix);
 		if (ret_val1 != 0 || ret_val2 != 0) {
-			raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_9_CONTENT);
+			raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_5_STRING_H);
 			ret_val = ERR;
 			break;
 		}
@@ -89,7 +71,7 @@ int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], char final_lst
 			ret_val1 = strcat_s(student_dirs[*dir_list_len], STUDENT_DIR_NAME_LEN, id);
 			ret_val2 = strcat_s(final_lst[*dir_list_len], STUDENT_DIR_NAME_LEN, id);
 			if (ret_val1 != 0 || ret_val2 != 0) {
-				raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_9_CONTENT);
+				raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_5_STRING_H);
 				ret_val = ERR;
 				break;
 			}
@@ -104,11 +86,6 @@ int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], char final_lst
 	if (fclose(student_id_fp) != IS_FALSE)
 		return ERR;
 	return ret_val;
-}
-
-void str_safe_free(char *ptr) {
-	if (ptr != NULL)
-		free(ptr);
 }
 
 int manager(char *dir_path) {
@@ -126,7 +103,7 @@ int manager(char *dir_path) {
 	
 	if (parseStudentDirLst(students_grades_dir_lst, final_lst, &dir_list_len, file_path) != IS_TRUE) {
 		free(file_path);
-		raiseError(4, __FILE__, __func__, __LINE__, ERROR_ID_4_CONTENT);
+		raiseError(4, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 		return ERR;
 	}
 	free(file_path);
@@ -171,7 +148,7 @@ int manager(char *dir_path) {
 int main(int argc, char *argv[])
 {
 	if (ensureArgs(argc, EXPECTED_ARGC, argv) != IS_TRUE) {
-		raiseError(1, __FILE__, __func__, __LINE__, ERROR_ID_1_CONTENT);
+		raiseError(1, __FILE__, __func__, __LINE__, ERROR_ID_1_ARGS);
 		return IS_TRUE;
 	}
 	if (manager(argv[1]) != IS_TRUE)

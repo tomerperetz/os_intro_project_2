@@ -3,9 +3,9 @@
 
 typedef struct student_grades_s
 {
-	int *hw_grades_arr[NUM_OF_HW];
-	int *mid_term_grades_arr[NUM_OF_MID_EXAMS];
-	int *final_exam_grades_arr[NUM_OF_FINAL_EXAMS];
+	int hw_grades_arr[NUM_OF_HW];
+	int mid_term_grades_arr[NUM_OF_MID_EXAMS];
+	int final_exam_grades_arr[NUM_OF_FINAL_EXAMS];
 	int final_course_grade;
 } student_grades_struct;
 
@@ -17,5 +17,5 @@ int getFinalExamGrade(int moedA, int moedB, int min_th, int *final_grade_ptr);
 int calcFinalGrade(int hw_grade, int mid_term_exam_grade, int final_exam_grade, int *final_course_grade_ptr);
 int analyzeStudent(student_grades_struct *student_grades_ptr);
 void printStudent(student_grades_struct *student_grades_ptr);
-char** initGradesList(char **user_path);
+char** initGradesList(char *user_path);
 void initStudentStruct(int *hw_grades_list, int *mid_grades_list, int *final_grades_list, student_grades_struct *student);

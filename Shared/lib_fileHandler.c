@@ -1,4 +1,5 @@
 #include "lib_fileHandler.h"
+#include "lib_str_func.h"
 
 int readGradeFile(char *filename[], int *grade)
 {
@@ -71,11 +72,7 @@ int getStudentID(char *path, char *ID)
 	return TRUE;
 }
 
-void str_safe_free(char *ptr) 
-{
-	if (ptr != NULL)
-		free(ptr);
-}
+
 
 int printToFile(char *user_path, int final_grade)
 {

@@ -1,12 +1,11 @@
 #include "studentGrade.h"
-
+#include <math.h>
 
 
 void copy_arr(int *src, int *dst, int n)
 {
 	for (int i = 0; i < n; i++)
 		dst[i] = src[i];
-	return TRUE;
 }
 
 int sortGrades(int *grades_list, int elements_number)
@@ -108,7 +107,7 @@ int calcFinalGrade(int hw_grade, int mid_term_exam_grade, int final_exam_grade, 
 	Returns: TRUE when done
 	*/
 
-	*final_course_grade_ptr = HW_WEIGHT * hw_grade + MID_TERM_EXAM_WEIGHT * mid_term_exam_grade + FINAL_EXAM_WEIGHT * final_exam_grade;
+	*final_course_grade_ptr = (int)ceil(HW_WEIGHT * hw_grade + MID_TERM_EXAM_WEIGHT * mid_term_exam_grade + FINAL_EXAM_WEIGHT * final_exam_grade);
 	
 	return TRUE;
 }
@@ -120,14 +119,14 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 	int mid_exam_grade = 0;
 	int final_exam_grade = 0;
 
-	status = sortGrades(&(student_grades_ptr->hw_grades_arr), NUM_OF_HW);
+	status = sortGrades((student_grades_ptr->hw_grades_arr), NUM_OF_HW);
 	if (status != TRUE)
 	{ 
 		printf("Error in sorting student homework!");
 		return ERR;
 	}
 
-	status = getGradesAvg(&(student_grades_ptr->hw_grades_arr), NUM_OF_HW_TO_USE, GRADE_TH, &hw_grade);
+	status = getGradesAvg((student_grades_ptr->hw_grades_arr), NUM_OF_HW_TO_USE, GRADE_TH, &hw_grade);
 	if (status != TRUE)
 	{
 		printf("Error in calculating homework average!");
@@ -162,20 +161,20 @@ void printStudent(student_grades_struct *student_grades_ptr)
 {
 
 	printf("hw grades arr:\n");
-	printGradesArr(&student_grades_ptr->hw_grades_arr, NUM_OF_HW);
+	printGradesArr(student_grades_ptr->hw_grades_arr, NUM_OF_HW);
 
 	printf("mid term grades arr:\n");
-	printGradesArr(&student_grades_ptr->mid_term_grades_arr, NUM_OF_MID_EXAMS);
+	printGradesArr(student_grades_ptr->mid_term_grades_arr, NUM_OF_MID_EXAMS);
 
 	printf("final exam grades arr:\n");
-	printGradesArr(&student_grades_ptr->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
+	printGradesArr(student_grades_ptr->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
 
 	printf("final course grade: %d\n", student_grades_ptr->final_course_grade);
 
 	return;
 }
 
-char** initGradesList(char **user_path)
+char** initGradesList(char *user_path)
 {
 	char **files;
 	int path_len = 0;
@@ -228,5 +227,4 @@ void initStudentStruct(int *hw_grades_list, int *mid_grades_list, int *final_gra
 	copy_arr(final_grades_list, student->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
 	student->final_course_grade = 0;
 
-	return TRUE;
 }

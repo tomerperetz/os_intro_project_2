@@ -24,8 +24,6 @@ static const int EQUAL = 0;
 static const int IS_TRUE = 1;
 static const int IS_FALSE = 0;
 static const char END_OF_STR = '\0';
-static const char OPEN_PARENTHESIS = '(';
-static const char CLOSE_PARENTHESIS = ')';
 
 //defines for project 2
 #define GRADE_TH 60
@@ -40,13 +38,7 @@ static const char CLOSE_PARENTHESIS = ')';
 #define FINAL_EXAM_WEIGHT 0.6
 #define MAX_FILE_NAME_LEN 12
 #define MAX_FILES 13
-
-
-//Const That Relevant For This Project Only
-# define MAX_SON_ARG_INPUT_LEN 32
-# define MAX_FATHER_ARG_INPUT_LEN 256
-
-# define MAX_NUM_OF_STUDENTS 10
-# define ID_LEN_STR 12
-# define STUDENT_DIR_NAME_LEN 20
+#define MAX_NUM_OF_STUDENTS 10
+#define ID_LEN_STR 12
+#define STUDENT_DIR_NAME_LEN 20
 

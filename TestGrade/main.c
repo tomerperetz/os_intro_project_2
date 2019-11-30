@@ -5,12 +5,10 @@
 #include "../Shared/hardCodedData.h"
 #include "../Shared/lib_fileHandler.h"
 #include "studentGrade.h"
-#include"../Shared/lib_errorHandler.h"
-// Constants -------------------------------------------------------------------
+#include "../Shared/lib_errorHandler.h"
+#include "../Shared/argparser.h"
 
-#define NUM_THREADS 3
-#define BRUTAL_TERMINATION_CODE 0x55
-#define ERROR_CODE ((int)(-1))
+// Constants -------------------------------------------------------------------
 
 
 int main(int argc, char *argv[])
@@ -23,13 +21,13 @@ int main(int argc, char *argv[])
 
 	// args parser
 	if (ensureArgs(argc, 2, argv) == IS_FALSE)
-		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_CONTENT);
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 
 	// init files list
 	files = initGradesList(argv[1]);
 	if (files == NULL)
 	{
-		raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_5_CONTENT);
+		raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 		return ERR;
 	}
 	
@@ -41,7 +39,7 @@ int main(int argc, char *argv[])
 	{
 		if (readGradeFile(files[i], &hw_grades_list[i]) != TRUE)
 		{
-			raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_5_CONTENT);
+			raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 			freeFilesList(files);
 			return NULL;
 		}
@@ -52,7 +50,7 @@ int main(int argc, char *argv[])
 	{
 		if (readGradeFile(files[i], &mid_grades_list[i- NUM_OF_HW])!=TRUE)
 		{
-			raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_5_CONTENT);
+			raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 			freeFilesList(files);
 			return NULL;
 		}
@@ -63,7 +61,7 @@ int main(int argc, char *argv[])
 	{
 		if (readGradeFile(files[i], &final_grades_list[i - NUM_OF_HW - NUM_OF_MID_EXAMS])!= TRUE)
 		{
-			raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_5_CONTENT);
+			raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 			freeFilesList(files);
 			return NULL;
 		}

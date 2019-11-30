@@ -27,9 +27,6 @@
     <ClCompile Include="..\Shared\argparser.c">
       <Filter>Shared Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\CalcStudentGrades.c">
-      <Filter>Shared Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\lib_errorHandler.c">
       <Filter>Shared Source Files</Filter>
     </ClCompile>
