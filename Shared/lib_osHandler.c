@@ -55,7 +55,8 @@ int CreateProcessSimpleMain(char *command)
 
 	retVal = GetExitCodeProcess(procinfo.hProcess, &exitcode);
 	if (exitcode != 0) {
-		return ERR;
+		printf("Captain, were unable to calculate %d", exitcode);
+		return IS_FALSE;
 	}
 	if (retVal == 0)
 	{

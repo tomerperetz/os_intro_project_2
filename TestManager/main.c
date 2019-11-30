@@ -62,19 +62,21 @@ int removeEnterCharFromString(char *str)
 	}
 	return IS_TRUE;
 }
-int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], int *dir_list_len, char file_path[])
+int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], char final_lst[][STUDENT_DIR_NAME_LEN], int *dir_list_len, char file_path[])
 {
 	FILE *student_id_fp = NULL;
-	int ret_val1 = ERR, ret_val2 = ERR;
-	char id[ID_LEN_STR], grades_prefix[9] = "/grades_";
+	int ret_val1 = ERR, ret_val2 = ERR, ret_val = IS_TRUE;
+	char id[ID_LEN_STR], grades_prefix[9] = "/grades_", final_prefix[9] = "/final_";
 	/*TO DO: change to Tomer's open safe func*/
 	if (fopen_s(&student_id_fp, file_path, "r") != IS_FALSE || student_id_fp == NULL) {
 		return ERR;
 	}
 	while (!feof(student_id_fp) && *dir_list_len <= MAX_NUM_OF_STUDENTS) {
 		ret_val1 = strcpy_s(student_dirs[*dir_list_len], STUDENT_DIR_NAME_LEN, grades_prefix);
-		if (ret_val1 != 0) {
+		ret_val2 = strcpy_s(final_lst[*dir_list_len], STUDENT_DIR_NAME_LEN, final_prefix);
+		if (ret_val1 != 0 || ret_val2 != 0) {
 			raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_9_CONTENT);
+			ret_val = ERR;
 			break;
 		}
 		// reading a line that contains student ID
@@ -84,7 +86,13 @@ int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], int *dir_list_
 		ret_val2 = isStudentIdValid(id);
 		// increases the students list by 1 if it is indeed a valid ID
 		if (ret_val1 == IS_TRUE && ret_val2 == IS_TRUE) {
-			strcat_s(student_dirs[*dir_list_len], STUDENT_DIR_NAME_LEN, id);
+			ret_val1 = strcat_s(student_dirs[*dir_list_len], STUDENT_DIR_NAME_LEN, id);
+			ret_val2 = strcat_s(final_lst[*dir_list_len], STUDENT_DIR_NAME_LEN, id);
+			if (ret_val1 != 0 || ret_val2 != 0) {
+				raiseError(9, __FILE__, __func__, __LINE__, ERROR_ID_9_CONTENT);
+				ret_val = ERR;
+				break;
+			}
 			*dir_list_len += 1;
 		}
 		else {
@@ -95,7 +103,7 @@ int parseStudentDirLst(char student_dirs[][STUDENT_DIR_NAME_LEN], int *dir_list_
 	// close the file and check whether its done successfully
 	if (fclose(student_id_fp) != IS_FALSE)
 		return ERR;
-	return IS_TRUE;
+	return ret_val;
 }
 
 void str_safe_free(char *ptr) {
@@ -104,9 +112,10 @@ void str_safe_free(char *ptr) {
 }
 
 int manager(char *dir_path) {
-	int dir_list_len = 0, idx = 0, return_value1 = ERR, return_value2 = ERR, return_value = ERR;
+	int dir_list_len = 0, idx = 0, return_value1 = ERR, return_value2 = ERR, return_value = IS_TRUE;
 	char *file_path = NULL, students_grades_dir_lst[MAX_NUM_OF_STUDENTS][STUDENT_DIR_NAME_LEN], *student_grade_path = NULL;
-	char *cmd = NULL, test_grades_str[20] = "TestGrade.exe ";
+	char *cmd = NULL, test_grades_str[20] = "TestGrade.exe ", final_lst[MAX_NUM_OF_STUDENTS][STUDENT_DIR_NAME_LEN],
+		*final_grade_student_path_no_sufix = NULL, *final_grade_student_path = NULL, sufix[5] = ".txt";
 	const char student_ids_file_name[20] = "/studentIds.txt";
 
 	
@@ -115,28 +124,44 @@ int manager(char *dir_path) {
 		return ERR;
 	}
 	
-	if (parseStudentDirLst(students_grades_dir_lst, &dir_list_len, file_path) != IS_TRUE) {
+	if (parseStudentDirLst(students_grades_dir_lst, final_lst, &dir_list_len, file_path) != IS_TRUE) {
 		free(file_path);
 		raiseError(4, __FILE__, __func__, __LINE__, ERROR_ID_4_CONTENT);
 		return ERR;
 	}
 	free(file_path);
-
+	
 	for (idx = 0; idx < dir_list_len; idx++) {
 		return_value1 = strcatDynamic(dir_path, students_grades_dir_lst[idx], &student_grade_path);
 		return_value2 = strcatDynamic(test_grades_str, student_grade_path, &cmd);
 		if (return_value1 != IS_TRUE || return_value1 != IS_TRUE) {
+			return_value = ERR;
 			break;
 		}
-		return_value = CreateProcessSimpleMain(cmd);
-		if (return_value != IS_TRUE) {
+		return_value1 = CreateProcessSimpleMain(cmd);
+		if (return_value1 == ERR) {
+			return_value = ERR;
 			break;
 		}
 
-		str_safe_free(student_grade_path);
 		str_safe_free(cmd);
-		student_grade_path = NULL;
 		cmd = NULL;
+
+		return_value1 = strcatDynamic(student_grade_path, final_lst[idx], &final_grade_student_path_no_sufix);
+		return_value2 = strcatDynamic(final_grade_student_path_no_sufix, sufix, &final_grade_student_path);
+		if (return_value1 != IS_TRUE || return_value1 != IS_TRUE) {
+			return_value = ERR;
+			break;
+		}
+		str_safe_free(student_grade_path);
+		student_grade_path = NULL;
+
+
+		printf("%s\n", final_grade_student_path);
+		str_safe_free(final_grade_student_path_no_sufix);
+		str_safe_free(final_grade_student_path);
+		final_grade_student_path_no_sufix = NULL;
+		final_grade_student_path = NULL;
 	}
 	str_safe_free(student_grade_path);
 	str_safe_free(cmd);
