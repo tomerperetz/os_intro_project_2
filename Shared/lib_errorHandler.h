@@ -35,7 +35,6 @@ static const char ERROR_ID_3_CONTENT[48] = \
 static const char ERROR_ID_4_CONTENT[55] = \
 "IO ERROR has occured.\nProgram can't open the file\n";
 static const char ERROR_ID_5_CONTENT[55] = \
-"Memory allocation error.\n";
 "IO ERROR has occured.\nProgram can't close the file\n";
 static const char ERROR_ID_6_CONTENT[100] = \
 "Run Time Error: Process was timeout!\n" \
