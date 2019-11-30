@@ -17,3 +17,4 @@ int getFinalExamGrade(int moedA, int moedB, int min_th, int *final_grade_ptr);
 int calcFinalGrade(int hw_grade, int mid_term_exam_grade, int final_exam_grade, int *final_course_grade_ptr);
 int analyzeStudent(student_grades_struct *student_grades_ptr);
 void printStudent(student_grades_struct *student_grades_ptr);
+char** initGradesList(char **user_path);

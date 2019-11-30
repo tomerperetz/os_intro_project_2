@@ -28,3 +28,19 @@ void readGradeFile(char *filename[], int *grade)
 	fscanf_s(fp, "%d", grade);
 	fclose(fp);
 }
+
+char* getFilePath(const char dir_path[], const char file_name[])
+{
+	int retVal = 0, size_of_file_path = 0;
+	char *file_path_buffer;
+
+	size_of_file_path = sizeof(char)*(strlen(dir_path) + strlen(file_name) + 1);
+	file_path_buffer = (char*)malloc(size_of_file_path);
+	if (file_path_buffer == NULL)
+		return NULL;
+	file_path_buffer[size_of_file_path] = '\0';
+	strcpy_s(file_path_buffer, size_of_file_path, dir_path);
+	strcat_s(file_path_buffer, size_of_file_path, file_name);
+	return file_path_buffer;
+
+}

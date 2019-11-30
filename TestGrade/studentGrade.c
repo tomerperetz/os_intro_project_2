@@ -175,3 +175,51 @@ void printStudent(student_grades_struct *student_grades_ptr)
 
 	return;
 }
+
+
+char** initGradesList(char **user_path)
+{
+	char **files;
+	int path_len = 0;
+	int max_len = 0;
+
+	// Allocate memory for files array
+	files = (char**)malloc(MAX_FILES * sizeof *files);
+	if (files == NULL)
+	{
+		printf("Memory allocation faild!\n");
+		return NULL;
+	}
+
+	// Allocate memory for each file path
+	path_len = strlen(user_path) + 1;
+	for (int i = 0; i < MAX_FILES; i++)
+	{
+		max_len = MAX_FILE_NAME_LEN + path_len + 1;
+		files[i] = (char*)malloc((max_len) * sizeof(char));
+		if (files[i] == NULL)
+		{
+			printf("Memory allocation faild!\n");
+			return NULL;
+		}
+		strcpy_s(files[i], path_len, user_path);
+	}
+
+	// init path list
+	strcat_s(files[0], max_len, "ex01.txt");
+	strcat_s(files[1], max_len, "ex02.txt");
+	strcat_s(files[2], max_len, "ex03.txt");
+	strcat_s(files[3], max_len, "ex04.txt");
+	strcat_s(files[4], max_len, "ex05.txt");
+	strcat_s(files[5], max_len, "ex06.txt");
+	strcat_s(files[6], max_len, "ex07.txt");
+	strcat_s(files[7], max_len, "ex08.txt");
+	strcat_s(files[8], max_len, "ex09.txt");
+	strcat_s(files[9], max_len, "ex10.txt");
+	strcat_s(files[10], max_len, "midterm.txt");
+	strcat_s(files[11], max_len, "moedA.txt");
+	strcat_s(files[12], max_len, "moedB.txt");
+
+	return files;
+}
+

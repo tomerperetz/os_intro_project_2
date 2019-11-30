@@ -1,4 +1,4 @@
 #pragma once
 
-int readGradeFile(char *filename, int *grade);
+void readGradeFile(char *filename, int *grade);
 

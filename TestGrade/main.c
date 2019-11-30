@@ -1,11 +1,11 @@
 // Includes --------------------------------------------------------------------
-
 #include <stdbool.h>
 #include <windows.h>
+#include <string.h>
 #include "../Shared/hardCodedData.h"
 #include "../Shared/lib_fileHandler.h"
 #include "studentGrade.h"
-
+#include"../Shared/lib_errorHandler.h"
 // Constants -------------------------------------------------------------------
 
 #define NUM_THREADS 3
@@ -111,16 +111,14 @@
 //}
 
 
-
-
-int main()
+void run_demo()
 {
 	int status = 0;
 	int hw_avg = 0;
 	char demo_file_path_1[76] = "c:/Users/Adital/Documents/Homework/IOS/HW2/EX2/test_files/ex1_123456789.txt";
 	char demo_file_path_2[76] = "c:/Users/Adital/Documents/Homework/IOS/HW2/EX2/test_files/ex2_123456789.txt";
 	int *hw_grades_list[NUM_OF_HW] = { 59, 59, 59, 60, 60, 60,60, 60, 60, 60 };
-	int *mid_grades_list[NUM_OF_MID_EXAMS] = {80};
+	int *mid_grades_list[NUM_OF_MID_EXAMS] = { 80 };
 	int *final_grades_list[NUM_OF_FINAL_EXAMS] = { 80, 70 };
 	student_grades_struct demo_student;
 
@@ -132,7 +130,74 @@ int main()
 
 	analyzeStudent(&demo_student);
 	printStudent(&demo_student);
+}
 
+
+
+
+int main(int argc, char *argv[])
+{
+	char **files;
+	int *hw_grades_list[NUM_OF_HW];
+	int *mid_grades_list[NUM_OF_MID_EXAMS];
+	int *final_grades_list[NUM_OF_FINAL_EXAMS];
+	student_grades_struct demo_student;
+
+	// args parser
+	if (ensureArgs(argc, 2, argv) == IS_FALSE)
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_CONTENT);
+
+	// init files list
+	files = initGradesList(argv[1]);
+	if (files == NULL)
+	{
+		raiseError(5, __FILE__, __func__, __LINE__, ERROR_ID_5_CONTENT);
+		return ERR;
+	}
 	
+	//------------------------------------------------------//
+	//		REPLACE WITH THREAD                             //
+	//------------------------------------------------------//
+	// init hw grades
+	for (int i = 0; i < NUM_OF_HW; i++)
+	{
+		readGradeFile(files[i], &hw_grades_list[i]);
+	}
+
+	// init mid term exam grade
+	for (int i = NUM_OF_HW; i < NUM_OF_MID_EXAMS+ NUM_OF_HW; i++)
+	{
+		readGradeFile(files[i], &mid_grades_list[i- NUM_OF_HW]);
+	}
+
+	// init final exam grade
+	for (int i = NUM_OF_MID_EXAMS + NUM_OF_HW; i < NUM_OF_MID_EXAMS + NUM_OF_HW + NUM_OF_FINAL_EXAMS; i++)
+	{
+		readGradeFile(files[i], &final_grades_list[i - NUM_OF_HW - NUM_OF_MID_EXAMS]);
+	}
+	//------------------------------------------------------//
+	//		END REPLACE WITH THREAD                         //
+	//------------------------------------------------------//
+
+	copy_arr(hw_grades_list, demo_student.hw_grades_arr, NUM_OF_HW);
+	copy_arr(mid_grades_list, demo_student.mid_term_grades_arr, NUM_OF_MID_EXAMS);
+	copy_arr(final_grades_list, demo_student.final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
+	demo_student.final_course_grade = 0;
+
+
+	analyzeStudent(&demo_student);
+	printStudent(&demo_student);
+
+
+	// free memory allocation
+	for (int i = 0; i < MAX_FILES; i++)
+	{
+		if (files[i] != NULL)
+			free(files[i]);
+	}
+	if (files != NULL)
+		free(files);
+		
+
 	return 0;
 }

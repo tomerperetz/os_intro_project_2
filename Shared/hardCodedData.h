@@ -38,7 +38,8 @@ static const char CLOSE_PARENTHESIS = ')';
 #define HW_WEIGHT 0.2
 #define MID_TERM_EXAM_WEIGHT 0.2
 #define FINAL_EXAM_WEIGHT 0.6
-
+#define MAX_FILE_NAME_LEN 12
+#define MAX_FILES 13
 
 
 //Const That Relevant For This Project Only
