@@ -4,7 +4,7 @@
 #include "lib_str_func.h"
 #include <Windows.h>
 
-int readGradeFile(char *filename[], int *grade);
+int readGradeFile(char filename[], int *grade);
 
 char* getFilePath(const char dir_path[], const char file_name[]);
 

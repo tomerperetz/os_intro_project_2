@@ -1,7 +1,7 @@
 #include "lib_fileHandler.h"
 #include "lib_str_func.h"
 
-int readGradeFile(char *filename[], int *grade)
+int readGradeFile(char filename[], int *grade)
 {
 	/*
 	Description: Read grade from grades file txt
@@ -12,17 +12,18 @@ int readGradeFile(char *filename[], int *grade)
 	*/
 
 	FILE *fp = NULL;
-
+	
 	if (fopen_s(&fp, filename, "r") != FALSE)
 	{ 
 		/*open file failed! RaiseError*/
-		printf("open file FAILED\n");
+		printf("open file FAILED\nFile: %s\n", filename);
 		return IO_ERR;
 	}
-	
 	/*read first line to grade variable*/
 	fscanf_s(fp, "%d", grade);
-	fclose(fp);
+	
+	if (fclose(fp) != IS_FALSE)
+		return IO_ERR;
 
 	return TRUE;
 }

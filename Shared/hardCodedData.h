@@ -41,4 +41,4 @@ static const char END_OF_STR = '\0';
 #define MAX_NUM_OF_STUDENTS 10
 #define ID_LEN_STR 12
 #define STUDENT_DIR_NAME_LEN 20
-
+#define GRADE_LEN 5

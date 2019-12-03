@@ -3,7 +3,7 @@
 /**
 * Demonstrates win32 process creation and termination.
 */
-int CreateProcessSimpleMain(char *command)
+int CreateProcessSimpleMain(char *command, char *id)
 {
 	PROCESS_INFORMATION procinfo;
 	DWORD				waitcode;
@@ -55,7 +55,7 @@ int CreateProcessSimpleMain(char *command)
 
 	retVal = GetExitCodeProcess(procinfo.hProcess, &exitcode);
 	if (exitcode != 0) {
-		printf("Captain, were unable to calculate %d", exitcode);
+		printf("Captain, were unable to calculate %s", id);
 		return IS_FALSE;
 	}
 	if (retVal == 0)
