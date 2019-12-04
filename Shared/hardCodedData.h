@@ -28,8 +28,8 @@ static const char END_OF_STR = '\0';
 //defines for project 2
 #define GRADE_TH 60
 #define NUM_OF_HW 10
-#define MID_EXAM_IDX 11
-#define FINAL_EXAM_IDX 12
+#define MID_EXAM_IDX 10
+#define FINAL_EXAM_IDX 11
 #define NUM_OF_HW_TO_USE 8
 #define NUM_OF_MID_EXAMS 1
 #define NUM_OF_FINAL_EXAMS 2
