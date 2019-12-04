@@ -151,7 +151,6 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 		printf("Error in getting final exam test!");
 		return ERR;
 	}
-
 	return TRUE;
 	
 

@@ -20,17 +20,21 @@ void printLst(int lst[], int lst_size)
 
 void gradeLstToStruct(int grades_list[], student_grades_struct *student_grades_struct) {
 	int lst_idx = 0, hw_idx = 0, mid_exam_idx = 0, final_exam_idx = 0;
-	for (lst_idx = 0; lst_idx < TOT_NUM_OF_FILES; lst_idx++) {
-		if (lst_idx < NUM_OF_HW) {
+	for (lst_idx = 0; lst_idx < TOT_NUM_OF_FILES; lst_idx++) 
+	{
+		if (lst_idx < NUM_OF_HW) 
+		{
 			student_grades_struct->hw_grades_arr[hw_idx] = grades_list[lst_idx];
 			hw_idx++;
 		}
 		else if (lst_idx == MID_EXAM_IDX)
 			student_grades_struct->mid_term_grades_arr[mid_exam_idx] = grades_list[lst_idx];
-		else {
+		else 
+		{
 			student_grades_struct->final_exam_grades_arr[final_exam_idx] = grades_list[lst_idx];
 			final_exam_idx++;
 		}
+		
 	}
 	student_grades_struct->final_course_grade = 0;
 }
