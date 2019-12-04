@@ -7,4 +7,4 @@
 
 
 BOOL CreateProcessSimple(LPTSTR CommandLine, PROCESS_INFORMATION *ProcessInfoPtr);
-int CreateProcessSimpleMain(char *command);
+int CreateProcessSimpleMain(char *command, char *id);
