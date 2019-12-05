@@ -1,3 +1,10 @@
+/*
+====================================================================================================================
+Description:
+Operation System functions: Proccesses and Threads.
+====================================================================================================================
+*/
+
 // Includes --------------------------------------------------------------------
 #include "lib_osHandler.h"
 #include "../TestGrade/studentGrade.h"
@@ -97,75 +104,25 @@ BOOL CreateProcessSimple(LPTSTR CommandLine, PROCESS_INFORMATION *ProcessInfoPtr
 }
 
 
-// Thread Functions
-//
-//int mainCreateThreadSimple(char **files_list, int *grades_list)
-//{
-//	HANDLE p_thread_handles[MAX_FILES];
-//	DWORD p_thread_ids[MAX_FILES];
-//	DWORD wait_code;
-//	DWORD num_of_threads = MAX_FILES;
-//	BOOL ret_val;
-//	size_t i;
-//
-//	// Create two threads, each thread performs on task.
-//	for (int i = 0; i < MAX_FILES; i++)
-//	{
-//		//p_thread_handles[i] = CreateThreadSimple(readGradeFile(files_list[i], &grades_list[i]), &p_thread_ids[i]);
-//
-//	}
-//
-//	//for (int i = 0; i < MAX_FILES; i++)
-//	//{
-//	//	p_thread_handles[i] = CreateThreadSimple(printf("index: %d, file: %s, grade: %d\n", i, files_list[i], grades_list[i]), &p_thread_ids[i]);
-//	//}
-//
-//	printf("threads created\n");
-//
-//	wait_code = WaitForMultipleObjects(
-//		13,           // number of objects in array
-//		p_thread_handles,     // array of objects
-//		FALSE,       // wait for any object
-//		5000);       // five-second wait
-//
-//	printf("done waiting");
-//
-//	if (WAIT_OBJECT_0 != wait_code)
-//	{
-//		printf("Error when waiting");
-//		return ERR;
-//	}
-//
-//	// Terminate the other thread
-//	// Normally, we would avoid terminating a thread so brutally,
-//	// because it might be in the middle of an operation that should not
-//	// be interrupted (like writing a file).
-//	// There are gentler ways of terminating a thread.
-//	ret_val = TerminateThread(p_thread_handles[1], BRUTAL_TERMINATION_CODE);
-//	if (FALSE == ret_val)
-//	{
-//		printf("Error when terminating\n");
-//		return ERR;
-//	}
-//
-//	// Close thread handles
-//	for (i = 0; i < MAX_FILES; i++)
-//	{
-//		ret_val = CloseHandle(p_thread_handles[i]);
-//		if (FALSE == ret_val)
-//		{
-//			printf("Error when closing\n");
-//			return ERR;
-//		}
-//	}
-//	return TRUE;
-//}
-//
-
 // Thread Function Definitions --------------------------------------------------------
+
+void freeThreadParamMem(STUDENT_GRADE_TREAD_params_t **p_thread_params_arr)
+{
+	for (int i = 0; i < MAX_FILES; i++)
+		free(p_thread_params_arr[i]);
+	free(p_thread_params_arr);
+}
 
 int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 {
+	/*
+	Description: read a list of files content into variables using threads.
+	parameters:
+			 - char **files_list - files list.
+			 -  int *grades_list - empty grades array.
+	Return: TRUE if succeded, ERR o.w
+	*/
+
 	HANDLE p_thread_handles[MAX_FILES];
 	DWORD p_thread_ids[MAX_FILES];
 	DWORD num_of_threads = MAX_FILES;
@@ -227,6 +184,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 	{
 		raiseError(6, __FILE__, __func__, __LINE__ ,ERROR_ID_6_THREADS);
 		printf("details: Timeout error when waiting\n");
+		freeThreadParamMem(p_thread_params_arr);
 		return ERR;
 	}
 	
@@ -234,6 +192,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 	{
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 		printf("details: Timeout error when waiting\n");
+		freeThreadParamMem(p_thread_params_arr);
 		return ERR;
 	}
 	
@@ -241,6 +200,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 	{
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 		printf("details: WAIT ANDONED\n");
+		freeThreadParamMem(p_thread_params_arr);
 		return ERR;
 	}
 	default:
@@ -252,9 +212,12 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 	{
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 		printf("details: Error when waiting. wait code: %d\n", wait_code);
+		freeThreadParamMem(p_thread_params_arr);
 		return ERR;
 	}
 
+	/* Free memory */
+	freeThreadParamMem(p_thread_params_arr);
 
 	/* Check the DWORD returned by readGradeFileThread */
 	for (int i = 0; i < MAX_FILES; i++)
@@ -294,10 +257,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 	}
 
 
-	/* Free memory */
-	for (int i = 0; i < MAX_FILES; i++)
-		free(p_thread_params_arr[i]);
-	free(p_thread_params_arr);
+	
 
 	return STUDENT_GRADE_TREAD__CODE_SUCCESS;
 }
@@ -307,6 +267,15 @@ static HANDLE CreateThreadSimple(LPTHREAD_START_ROUTINE p_start_routine,
 	LPVOID p_thread_parameters,
 	LPDWORD p_thread_id)
 {
+	/*
+	Description: create thread with arg wrapper
+	parameters:
+			- LPTHREAD_START_ROUTINE p_start_routine
+			- LPVOID p_thread_parameters
+			- LPDWORD p_thread_id
+	Return: thread_handle if succeded, ERR o.w
+	*/
+
 	HANDLE thread_handle;
 
 	if (NULL == p_start_routine)

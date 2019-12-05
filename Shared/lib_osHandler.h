@@ -1,3 +1,10 @@
+/*
+====================================================================================================================
+Description:
+Operation System functions: Proccesses and Threads.
+====================================================================================================================
+*/
+
 #pragma once
 #ifdef _MSC_VER
 #endif
@@ -9,7 +16,6 @@
 #include "lib_osHandler.h"
 
 // Types -----------------------------------------------------------------------
-
 
 typedef enum
 {
@@ -27,13 +33,14 @@ typedef struct
 } STUDENT_GRADE_TREAD_params_t;
 
 
-// Functions ------------------------------------------------------------------------
+// Declerations ------------------------------------------------------------------------
 
 // Process functions
 int CreateProcessSimpleMain(char *command, char *id);
 BOOL CreateProcessSimple(LPTSTR CommandLine, PROCESS_INFORMATION *ProcessInfoPtr);
 
 // Thread Functions
+void freeThreadParamMem(STUDENT_GRADE_TREAD_params_t **p_thread_params_arr);
 int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list);
 static HANDLE CreateThreadSimple(LPTHREAD_START_ROUTINE p_start_routine,
 	LPVOID p_thread_parameters,

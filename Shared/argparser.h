@@ -7,7 +7,6 @@ this lib is a parser for arguments recieved from user.
 
 #pragma once
 #ifdef _MSC_VER
-//#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #include "hardCodedData.h"

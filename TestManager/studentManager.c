@@ -1,6 +1,25 @@
+/*
+====================================================================================================================
+Description:
+Manage Calculating students grades main functions
+====================================================================================================================
+*/
+
+// Includes --------------------------------------------------------------------------------------------------------
+
 #include "studentManager.h"
 
-int manager(char *dir_path) {
+
+// Functions -------------------------------------------------------------------------------------------------------
+int manager(char *dir_path) 
+{
+	/*
+	Description: main Manager function - calc all students final grades and writes them to a file.
+	parameters:
+			- char *dir_path - path to main folder holding sub-directories for each student
+	Returns: TRUE if done, ERR o.w
+	*/
+
 	int dir_list_len = 0, idx = 0, return_value1 = ERR, return_value2 = ERR, return_value = TRUE, final_grade = -1, start_flag = TRUE;
 	char *id_lst_file_path = NULL, students_grades_dir_lst[MAX_NUM_OF_STUDENTS][STUDENT_DIR_NAME_LEN], *student_grade_path = NULL;
 	char *cmd = NULL, final_grades_path_lst[MAX_NUM_OF_STUDENTS][STUDENT_DIR_NAME_LEN],
@@ -100,9 +119,15 @@ int manager(char *dir_path) {
 }
 
 
-
 int isStudentIdValid(char *id_str)
 {
+	/*
+	Description: verify ID char array is a valid ID
+	parameters:
+			- char *id_str - string
+	Returns: TRUE if done, ERR o.w
+	*/
+
 	int idx = 0;
 	//Runs over the first 9 chars in the string and checks that they are integers
 	while (id_str[idx] != END_OF_STR && idx <= ID_LEN_STR - 3)
@@ -120,6 +145,13 @@ int isStudentIdValid(char *id_str)
 
 int removeEnterCharFromString(char *str)
 {
+	/*
+	Description: remove \n from char array and replace it with \0
+	parameters:
+			- char *st - string
+	Returns: TRUE if done, ERR o.w
+	*/
+
 	int idx = 0;
 	// Runs over the string and looks for the first '\n' and replaces it with '\0'
 	while (str[idx] != END_OF_STR)
@@ -140,6 +172,17 @@ int removeEnterCharFromString(char *str)
 int parseStudentIDs(char student_grades_dir_names[][STUDENT_DIR_NAME_LEN], char final_grades_path_lst[][STUDENT_DIR_NAME_LEN],
 	char ids_lst[][ID_LEN_STR], int *dir_list_len, char id_lst_file_path[])
 {
+	/*
+	Description: get all student IDS from a file
+	parameters:
+			char student_grades_dir_names[][STUDENT_DIR_NAME_LEN] - directory names
+			char final_grades_path_lst[][STUDENT_DIR_NAME_LEN] - final grades path
+			char ids_lst[][ID_LEN_STR] - ids list
+			int *dir_list_len - number of dirs
+			char id_lst_file_path[] - id list
+	Returns: TRUE if done, ERR o.w
+	*/
+
 	FILE *fp = NULL;
 	int ret_val1 = ERR, ret_val2 = ERR, ret_val = TRUE;
 	char id[ID_LEN_STR], grades_prefix[9] = "/grades_", final_prefix[9] = "/final_";
@@ -181,6 +224,16 @@ int parseStudentIDs(char student_grades_dir_names[][STUDENT_DIR_NAME_LEN], char 
 
 int printFinalGradeToFile(char *file_path, char *id, int grade, int *start_flag)
 {
+	/*
+	Description: print final student grades to output file
+	parameters:
+			- char *file_path
+			- char *id
+			- int grade
+			- int *start_flag
+	Returns: TRUE if done, ERR o.w
+	*/
+
 	FILE *fp = NULL;
 	// Checks whether this is the first time that the program trys to open the final grades file
 	if (*start_flag == TRUE) {

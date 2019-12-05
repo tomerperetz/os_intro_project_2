@@ -1,3 +1,19 @@
+/*
+====================================================================================================================
+Authors:
+	- Segev Elmalem, ID: 203149000
+	- Tomer Peretz, ID: 305002206
+Project: TestGrade
+Input: student grades directory path
+Outputs: prints final grade to file: <student_dir>\final_<ID>.txt
+Description:
+Calculates the final grade for a student from sepreate grade files.
+takes 8/10 best homework, mid exam and latest out of 2 final exam grades.
+final grade  = 0.2*hw_avg + 0.2*mid_exam +0.6*final exam
+====================================================================================================================
+*/
+
+
 // Includes --------------------------------------------------------------------
 #include <stdbool.h>
 #include <windows.h>
@@ -7,79 +23,22 @@
 #include "studentGrade.h"
 #include "../Shared/lib_errorHandler.h"
 #include "../Shared/argparser.h"
-#include "../Shared/lib_osHandler.h"
+#include "../Shared/lib_errorHandler.h"
+#include "studentGrade.h"
 
 // Functions -------------------------------------------------------------------
-void gradeLstToStruct(int grades_list[], student_grades_struct *student_grades_struct) {
-	int lst_idx = 0, hw_idx = 0, mid_exam_idx = 0, final_exam_idx = 0;
-	for (lst_idx = 0; lst_idx < TOT_NUM_OF_FILES; lst_idx++) 
-	{
-		if (lst_idx < NUM_OF_HW) 
-		{
-			student_grades_struct->hw_grades_arr[hw_idx] = grades_list[lst_idx];
-			hw_idx++;
-		}
-		else if (lst_idx == MID_EXAM_IDX)
-			student_grades_struct->mid_term_grades_arr[mid_exam_idx] = grades_list[lst_idx];
-		else 
-		{
-			student_grades_struct->final_exam_grades_arr[final_exam_idx] = grades_list[lst_idx];
-			final_exam_idx++;
-		}
-		
-	}
-	student_grades_struct->final_course_grade = 0;
-}
-
-int getAllStudentGrades(char *dir_path, int grades_list[])
-{
-	char file_names[TOT_NUM_OF_FILES][MAX_FILE_NAME_LEN] = \
-	{"/ex01.txt", "/ex02.txt", "/ex03.txt", "/ex04.txt", "/ex05.txt", "/ex06.txt", "/ex07.txt", "/ex08.txt", "/ex09.txt", \
-		"/ex10.txt", "/midterm.txt", "/moedA.txt", "/moedB.txt" };
-	int idx = 0, grade = -1;
-	char **files_list[TOT_NUM_OF_FILES];
-
-	/* Create file list array */
-	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++) 
-	{
-		if (strcatDynamic(dir_path, file_names[idx], &files_list[idx]) == FALSE)
-		{
-			return ERR;
-		}
-	}
-
-	/* Load grades to grades array using threads */
-	if (mainCreateReadGradesThreadSimple(files_list, grades_list) != STUDENT_GRADE_TREAD__CODE_SUCCESS)
-	{
-		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
-		return ERR;
-	}
-
-	/* free memory */
-	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++)
-	{
-		free(files_list[idx]);
-	}
-
-	return TRUE;
-}
-
-int gradeManager(char *dir_path) 
-{
-	int grades_list[TOT_NUM_OF_FILES];
-	student_grades_struct student_grades_struct;
-
-	if (getAllStudentGrades(dir_path, grades_list) != TRUE) {
-		return ERR;
-	}
-	gradeLstToStruct(grades_list, &student_grades_struct);
-	analyzeStudent(&student_grades_struct);
-	printToFile(dir_path, student_grades_struct.final_course_grade);
-	return TRUE;
-}
 
 int main(int argc, char *argv[])
-{
+{	
+	/*
+	Description: recieve directory path as an arg. verify number of args and sends it to gradeManager
+	convert numbers to integers and calculate the result.
+	parameters:
+			 - char* argv - user args. should include student directory path.
+			 - int argc = number of parameters given by user.
+	Return: int.
+	*/
+
 	// args parser
 	if (ensureArgs(argc, 2, argv) == IS_FALSE) {
 		raiseError(1, __FILE__, __func__, __LINE__, ERROR_ID_1_ARGS);

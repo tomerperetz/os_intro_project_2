@@ -5,11 +5,21 @@ This lib contains all functions related to string handeling
 ====================================================================================================================
 */
 
-#include "../Shared/lib_errorHandler.h"
-#include "../Shared/hardCodedData.h"
+// Includes --------------------------------------------------------------------------------------------------------
+#include "lib_str_func.h"
 
+// Functions -------------------------------------------------------------------------------------------------------
 int strcatDynamic(const char first_source[], const char second_source[], char **buffer)
 {
+	/*
+	Description: append two strings into a buffer 
+	parameters:
+			 - const char first_source[] - first string
+			 - const char second_source[] - second string
+			 - char **buffer - NULL buffer this will contain the attached string
+	Return: TRUE if succeded, ERR o.w
+	*/
+
 	int retVal1 = ERR, retVal2 = ERR, size_of_file_path = 0;
 
 	size_of_file_path = (strlen(first_source) + strlen(second_source) + 1);
@@ -30,6 +40,13 @@ int strcatDynamic(const char first_source[], const char second_source[], char **
 
 void str_safe_free(char *ptr)
 {
+	/*
+	Description: free char poiner
+	parameters:
+			 - char *ptr - pointer
+	Return: VOID
+	*/
+
 	if (ptr != NULL)
 		free(ptr);
 }

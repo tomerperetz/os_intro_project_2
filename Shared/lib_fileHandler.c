@@ -1,15 +1,23 @@
-#include "lib_fileHandler.h"
-#include "lib_str_func.h"
-#include "lib_osHandler.h"
+/*
+====================================================================================================================
+Description:
+File handeling functions
+====================================================================================================================
+*/
 
+// Includes --------------------------------------------------------------------
+#include "lib_fileHandler.h"
+
+
+// Functions --------------------------------------------------------------------
 int readGradeFile(char filename[], int *grade)
 {
 	/*
-	Description: Read grade from grades file txt
+	Description: Read grade from grades file txt - FOR DEBUGGING. not using threads.
 	parameters:
 			- char *filename - file string 
 			- int *grade - pointer to grade variable
-	Returns: IS_TRUE if succeded, IS_FALSE o.w
+	Returns: true if succeded, IS_FALSE o.w
 	*/
 
 	FILE *fp = NULL;
@@ -17,29 +25,34 @@ int readGradeFile(char filename[], int *grade)
 	if (fopen_s(&fp, filename, "r") != FALSE)
 	{ 
 		/*open file failed! RaiseError*/
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 		printf("open file FAILED\nFile: %s\n", filename);
-		return IO_ERR;
+		return ERR;
 	}
 	/*read first line to grade variable*/
 	fscanf_s(fp, "%d", grade);
 	
 	if (fclose(fp) != IS_FALSE)
-		return IO_ERR;
+	{
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
+		printf("closing file FAILED\nFile: %s\n", filename);
+		return ERR;
+	}
 
 	return TRUE;
 }
 
 DWORD WINAPI readGradeFileThread(LPVOID lpParam)
 {
-	Sleep(10);
 
 	/*
 	Description: Read grade from grades file txt
 	parameters:
-			- char *filename - file string
-			- int *grade - pointer to grade variable
-	Returns: IS_TRUE if succeded, IS_FALSE o.w
+			- LPVOID lpParam - pointer to functions args
+	Returns: STUDENT_GRADE_TREAD__CODE_SUCCESS if succeded, ERR o.w
 	*/
+
+	Sleep(10);
 
 	FILE *fp = NULL;
 	STUDENT_GRADE_TREAD_params_t *p_params;
@@ -78,26 +91,15 @@ DWORD WINAPI readGradeFileThread(LPVOID lpParam)
 }
 
 
-char* getFilePath(const char dir_path[], const char file_name[])
-{
-	int retVal = 0, size_of_file_path = 0;
-	char *file_path_buffer;
-
-	size_of_file_path = sizeof(char)*(strlen(dir_path) + strlen(file_name) + 1);
-	file_path_buffer = (char*)malloc(size_of_file_path);
-	if (file_path_buffer == NULL)
-		return NULL;
-	file_path_buffer[size_of_file_path] = '\0';
-	strcpy_s(file_path_buffer, size_of_file_path, dir_path);
-	strcat_s(file_path_buffer, size_of_file_path, file_name);
-	return file_path_buffer;
-
-}
-
 void freeFilesList(char **files)
 {
+	/*
+	Description: free memory allocation for files path array
+	parameters:
+			- char **files - array of strings
+	Returns: VOID
+	*/
 
-	// free memory allocation
 	for (int i = 0; i < MAX_FILES; i++)
 	{
 		if (files[i] != NULL)
@@ -110,6 +112,14 @@ void freeFilesList(char **files)
 
 int getStudentID(char *path, char *ID)
 {
+	/*
+	Description: get student id from path
+	parameters:
+			- char *path - path that has id as last 9 chars
+			- char *ID - pointer to buffer that will hold the ID
+	Returns: TRUE 
+	*/
+
 	int path_len = 0;
 	path_len = strlen(path);
 
@@ -127,6 +137,13 @@ int getStudentID(char *path, char *ID)
 
 int printToFile(char *user_path, int final_grade)
 {
+	/*
+	Description: print integer to file path
+	parameters:
+			- char *user_path - output file path
+			- int final_grade - integer that need to be printed
+	Returns: TRUE when done, ERR o.w
+	*/
 	FILE *fp = NULL;
 	char ID[10];
 	char file_extension[5] = ".txt";
@@ -138,26 +155,23 @@ int printToFile(char *user_path, int final_grade)
 	getStudentID(user_path, ID);
 
 	if (strcatDynamic(ID, file_extension, &file_no_prefix) != IS_TRUE)
-	{
-		str_safe_free(file_no_prefix);
-		return FALSE;
-	}
+		return ERR;
 		
 	if (strcatDynamic(file_prefix, file_no_prefix, &filename) != IS_TRUE)
-	{
-		str_safe_free(filename);
-		return FALSE;
-	}
+		return ERR;
+	
 	if (strcatDynamic(user_path, filename, &output_path) != IS_TRUE)
-	{
-		str_safe_free(output_path);
-		return FALSE;
-	}
+		return ERR;
+	
 	if (fopen_s(&fp, output_path, "w") != FALSE)
 	{
 		/*open file failed! RaiseError*/
-		printf("open file FAILED\n");
-		return IO_ERR;
+		str_safe_free(file_no_prefix);
+		str_safe_free(filename);
+		str_safe_free(output_path);
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
+		printf("open file FAILED. file name: %s\n", output_path);
+		return ERR;
 	}
 
 	fprintf_s(fp, "%d", final_grade);

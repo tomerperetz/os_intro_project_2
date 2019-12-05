@@ -1,9 +1,27 @@
+/*
+====================================================================================================================
+Description:
+Caculate student grade main functions
+====================================================================================================================
+*/
+
+// Includes --------------------------------------------------------------------------------------------------------
 #include "studentGrade.h"
 #include <math.h>
 
 
+// Functions -------------------------------------------------------------------------------------------------------
+
 void copyArr(int *src, int *dst, int n)
 {
+	/*
+	Description: copy n elemnts from arr src to arr dst
+	parameters:
+			- int *src - source arr
+			- int *dst - dst arr
+			- int n - number of elemnts to copy
+	Returns: VOID
+	*/
 	for (int i = 0; i < n; i++)
 		dst[i] = src[i];
 }
@@ -38,6 +56,13 @@ int sortGrades(int *grades_list, int elements_number)
 
 void printGradesArr(int *grades_list, int n)
 {
+	/*
+	Description: Prints grades array screen. for debugging purpose.
+	parameters:
+			 - int *grades_list - grade array
+			 - int n - number of elemnts
+	Return: VOID
+	*/
 
 	for (int i = 0; i < n; ++i)
 		printf("%d\n", grades_list[i]);
@@ -114,6 +139,18 @@ int calcFinalGrade(int hw_grade, int mid_term_exam_grade, int final_exam_grade, 
 
 int analyzeStudent(student_grades_struct *student_grades_ptr)
 {
+	/*
+	Description: calculate final grade using the following formula:
+		hw_avg = 8/10 best homework grades. round up.
+		mid_term_exam = grade
+		final_exam_grade = latest grade from Moed A and Moed B.
+		final grade = 0.2 * hw_avg + 0.2 * mid_term_exam + 0.6 * final_exam grade.
+		round up.
+	parameters:
+			 - student_grades_struct *student_grades_ptr - student grades struct pointer
+	Return: int TRUE if done, ERR o.w
+	*/
+
 	int status = FALSE;
 	int hw_grade = 0;
 	int mid_exam_grade = 0;
@@ -122,21 +159,24 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 	status = sortGrades((student_grades_ptr->hw_grades_arr), NUM_OF_HW);
 	if (status != TRUE)
 	{ 
-		printf("Error in sorting student homework!");
+		raiseError(7, __FILE__, __func__, __LINE__, ERROR_ID_7_OTHER);
+		printf("details: Error in sorting student homework!");
 		return ERR;
 	}
 
 	status = getGradesAvg((student_grades_ptr->hw_grades_arr), NUM_OF_HW_TO_USE, GRADE_TH, &hw_grade);
 	if (status != TRUE)
 	{
-		printf("Error in calculating homework average!");
+		raiseError(7, __FILE__, __func__, __LINE__, ERROR_ID_7_OTHER);
+		printf("details: Error in calculating homework average!");
 		return ERR;
 	}
 
 	status = getFinalExamGrade(student_grades_ptr->final_exam_grades_arr[0], student_grades_ptr->final_exam_grades_arr[1], GRADE_TH, &final_exam_grade);
 	if (status != TRUE)
 	{
-		printf("Error in getting final exam test!");
+		raiseError(7, __FILE__, __func__, __LINE__, ERROR_ID_7_OTHER);
+		printf("details: Error in getting final exam test!");
 		return ERR;
 	}
 
@@ -153,12 +193,16 @@ int analyzeStudent(student_grades_struct *student_grades_ptr)
 	}
 	return TRUE;
 	
-
 }
 
 void printStudent(student_grades_struct *student_grades_ptr)
 {
-
+	/*
+	Description: Prints student struct fields to screen. for debugging purpose.
+	parameters:
+			 - student_grades_struct *student_grades_ptr - student grades struct pointer
+	Return: VOID
+	*/
 	printf("hw grades arr:\n");
 	printGradesArr(student_grades_ptr->hw_grades_arr, NUM_OF_HW);
 
@@ -173,57 +217,116 @@ void printStudent(student_grades_struct *student_grades_ptr)
 	return;
 }
 
-char** initGradesList(char *user_path)
+void gradeLstToStruct(int grades_list[], student_grades_struct *student_grades_struct) 
 {
-	char **files;
-	int path_len = 0;
-	int max_len = 0;
+	/*
+	Description: load student grade from array to struct
+	parameters:
+			 - student_grades_struct *student_grades_struct - student grades struct
+			 - int grades_list[] - grades array
+	Return: VOID
+	*/
 
-	// Allocate memory for files array
-	files = (char**)malloc(MAX_FILES * sizeof *files);
-	if (files == NULL)
+	int lst_idx = 0, hw_idx = 0, mid_exam_idx = 0, final_exam_idx = 0;
+	for (lst_idx = 0; lst_idx < TOT_NUM_OF_FILES; lst_idx++)
 	{
-		printf("Memory allocation faild!\n");
-		return NULL;
-	}
-
-	// Allocate memory for each file path
-	path_len = strlen(user_path) + 1;
-	for (int i = 0; i < MAX_FILES; i++)
-	{
-		max_len = MAX_FILE_NAME_LEN + path_len + 1;
-		files[i] = (char*)malloc((max_len) * sizeof(char));
-		if (files[i] == NULL)
+		if (lst_idx < NUM_OF_HW)
 		{
-			printf("Memory allocation faild!\n");
-			return NULL;
+			student_grades_struct->hw_grades_arr[hw_idx] = grades_list[lst_idx];
+			hw_idx++;
 		}
-		strcpy_s(files[i], path_len, user_path);
+		else if (lst_idx == MID_EXAM_IDX)
+			student_grades_struct->mid_term_grades_arr[mid_exam_idx] = grades_list[lst_idx];
+		else
+		{
+			student_grades_struct->final_exam_grades_arr[final_exam_idx] = grades_list[lst_idx];
+			final_exam_idx++;
+		}
+
 	}
-
-	// init path list
-	strcat_s(files[0], max_len, "/ex01.txt");
-	strcat_s(files[1], max_len, "/ex02.txt");
-	strcat_s(files[2], max_len, "/ex03.txt");
-	strcat_s(files[3], max_len, "/ex04.txt");
-	strcat_s(files[4], max_len, "/ex05.txt");
-	strcat_s(files[5], max_len, "/ex06.txt");
-	strcat_s(files[6], max_len, "/ex07.txt");
-	strcat_s(files[7], max_len, "/ex08.txt");
-	strcat_s(files[8], max_len, "/ex09.txt");
-	strcat_s(files[9], max_len, "/ex10.txt");
-	strcat_s(files[10], max_len, "/midterm.txt");
-	strcat_s(files[11], max_len, "/moedA.txt");
-	strcat_s(files[12], max_len, "/moedB.txt");
-
-	return files;
+	student_grades_struct->final_course_grade = 0;
 }
 
-void initStudentStruct(int *hw_grades_list, int *mid_grades_list, int *final_grades_list, student_grades_struct *student)
+void freeFileList(char **files_list)
 {
-	copyArr(hw_grades_list, student->hw_grades_arr, NUM_OF_HW);
-	copyArr(mid_grades_list, student->mid_term_grades_arr, NUM_OF_MID_EXAMS);
-	copyArr(final_grades_list, student->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
-	student->final_course_grade = 0;
+	/*
+	Description: free file list
+	parameters:
+			 - char **files_list - file list arr
+	Return: VOID
+	*/
+	for (int idx = 0; idx < TOT_NUM_OF_FILES; idx++)
+	{
+		free(files_list[idx]);
+	}
+}
 
+int getAllStudentGrades(char *dir_path, int grades_list[])
+{
+	/*
+	Description: load student grade from file to array using threads.
+	parameters:
+			 - char *dir_path - student grades directory path
+			 - int grades_list[] - empty grade list array
+	Return: int TRUE if done, ERR o.w
+	*/
+
+	char file_names[TOT_NUM_OF_FILES][MAX_FILE_NAME_LEN] = \
+	{"/ex01.txt", "/ex02.txt", "/ex03.txt", "/ex04.txt", "/ex05.txt", "/ex06.txt", "/ex07.txt", "/ex08.txt", "/ex09.txt", \
+		"/ex10.txt", "/midterm.txt", "/moedA.txt", "/moedB.txt" };
+	int idx = 0, grade = -1;
+	char *files_list[TOT_NUM_OF_FILES];
+
+	/* Create file list array */
+	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++)
+	{
+		if (strcatDynamic(dir_path, file_names[idx], &files_list[idx]) == FALSE)
+		{
+			return ERR;
+		}
+	}
+
+	/* Load grades to grades array using threads */
+	if (mainCreateReadGradesThreadSimple(files_list, grades_list) != STUDENT_GRADE_TREAD__CODE_SUCCESS)
+	{
+		freeFileList(files_list);
+		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+		return ERR;
+	}
+
+	/* free memory */
+	freeFileList(files_list);
+
+	return TRUE;
+}
+
+int gradeManager(char *dir_path)
+{
+	/*
+	Description: main function: takes directory path, load grades, calc final score and prints to file.
+	parameters:
+			 - char *dir_path - student grades directory path
+	Return: int TRUE if done, ERR o.w
+	*/
+
+	int grades_list[TOT_NUM_OF_FILES];
+	student_grades_struct student_grades_struct;
+
+	// Load student grade to arr
+	if (getAllStudentGrades(dir_path, grades_list) != TRUE)
+		return ERR;
+
+	// Load grade arr to struct
+	gradeLstToStruct(grades_list, &student_grades_struct);
+	
+	// Calculate student final grade
+	if (analyzeStudent(&student_grades_struct) != TRUE)
+	{
+		return ERR;
+	}
+	
+	// Print grade to file
+	printToFile(dir_path, student_grades_struct.final_course_grade);
+	
+	return TRUE;
 }
