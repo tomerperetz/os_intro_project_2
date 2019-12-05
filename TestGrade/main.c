@@ -7,17 +7,9 @@
 #include "studentGrade.h"
 #include "../Shared/lib_errorHandler.h"
 #include "../Shared/argparser.h"
+#include "../Shared/lib_osHandler.h"
 
-// Constants -------------------------------------------------------------------
-void printLst(int lst[], int lst_size)
-{
-	int i = 0;
-	for (i = 0; i < lst_size; i++) {
-		printf("%d\n", lst[i]);
-	}
-
-}
-
+// Functions -------------------------------------------------------------------
 void gradeLstToStruct(int grades_list[], student_grades_struct *student_grades_struct) {
 	int lst_idx = 0, hw_idx = 0, mid_exam_idx = 0, final_exam_idx = 0;
 	for (lst_idx = 0; lst_idx < TOT_NUM_OF_FILES; lst_idx++) 
@@ -39,38 +31,44 @@ void gradeLstToStruct(int grades_list[], student_grades_struct *student_grades_s
 	student_grades_struct->final_course_grade = 0;
 }
 
-
 int getAllStudentGrades(char *dir_path, int grades_list[])
 {
 	char file_names[TOT_NUM_OF_FILES][MAX_FILE_NAME_LEN] = \
 	{"/ex01.txt", "/ex02.txt", "/ex03.txt", "/ex04.txt", "/ex05.txt", "/ex06.txt", "/ex07.txt", "/ex08.txt", "/ex09.txt", \
-		"/ex10.txt", "/midterm.txt", "/moedA.txt", "/moedB.txt" }, *file_path = NULL;
+		"/ex10.txt", "/midterm.txt", "/moedA.txt", "/moedB.txt" };
 	int idx = 0, grade = -1;
+	char **files_list[TOT_NUM_OF_FILES];
 
-	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++) {
-		if (strcatDynamic(dir_path, file_names[idx], &file_path) == FALSE) {
+	/* Create file list array */
+	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++) 
+	{
+		if (strcatDynamic(dir_path, file_names[idx], &files_list[idx]) == FALSE)
+		{
 			return ERR;
 		}
-		//=================================================================
-		//************ TO DO: USE Thread!!!!! *********************************
-		//=================================================================
-		if (readGradeFile(file_path, &grade) != TRUE) {
-			raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
-			str_safe_free(file_path);
-			return ERR;
-		}
-		grades_list[idx] = grade;
-		str_safe_free(file_path);
-		file_path = NULL;
 	}
+
+	/* Load grades to grades array using threads */
+	if (mainCreateReadGradesThreadSimple(files_list, grades_list) != STUDENT_GRADE_TREAD__CODE_SUCCESS)
+	{
+		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+		return ERR;
+	}
+
+	/* free memory */
+	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++)
+	{
+		free(files_list[idx]);
+	}
+
 	return TRUE;
 }
-
 
 int gradeManager(char *dir_path) 
 {
 	int grades_list[TOT_NUM_OF_FILES];
 	student_grades_struct student_grades_struct;
+
 	if (getAllStudentGrades(dir_path, grades_list) != TRUE) {
 		return ERR;
 	}
@@ -80,12 +78,8 @@ int gradeManager(char *dir_path)
 	return TRUE;
 }
 
-
-
-
 int main(int argc, char *argv[])
 {
-
 	// args parser
 	if (ensureArgs(argc, 2, argv) == IS_FALSE) {
 		raiseError(1, __FILE__, __func__, __LINE__, ERROR_ID_1_ARGS);
@@ -97,87 +91,3 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//
-//int tomer(int argc, char *argv[])
-//{
-//	char **files;
-//	int hw_grades_list[NUM_OF_HW];
-//	int mid_grades_list[NUM_OF_MID_EXAMS];
-//	int final_grades_list[NUM_OF_FINAL_EXAMS];
-//	student_grades_struct student_grades_struct;
-//
-//	// args parser
-//	if (ensureArgs(argc, 2, argv) == IS_FALSE) {
-//		raiseError(1, __FILE__, __func__, __LINE__, ERROR_ID_1_ARGS);
-//		return ERR;
-//	}
-//	// init files list
-//	files = initGradesList(argv[1]);
-//	if (files == NULL)
-//	{
-//		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
-//		printf("File Path: %s", argv[1]);
-//		return ERR;
-//	}
-//	printLst(files, 2);
-//	//------------------------------------------------------//
-//	//		REPLACE WITH THREAD                             //
-//	//------------------------------------------------------//
-//	// init hw grades
-//	for (int i = 0; i < NUM_OF_HW; i++)
-//	{
-//		if (readGradeFile(files[i], &hw_grades_list[i]) != TRUE)
-//		{
-//			raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
-//			freeFilesList(files);
-//			return NULL;
-//		}
-//	}
-//
-//	// init mid term exam grade
-//	for (int i = NUM_OF_HW; i < NUM_OF_MID_EXAMS+ NUM_OF_HW; i++)
-//	{
-//		if (readGradeFile(files[i], &mid_grades_list[i- NUM_OF_HW])!=TRUE)
-//		{
-//			raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
-//			freeFilesList(files);
-//			return NULL;
-//		}
-//	}
-//
-//	// init final exam grade
-//	for (int i = NUM_OF_MID_EXAMS + NUM_OF_HW; i < NUM_OF_MID_EXAMS + NUM_OF_HW + NUM_OF_FINAL_EXAMS; i++)
-//	{
-//		if (readGradeFile(files[i], &final_grades_list[i - NUM_OF_HW - NUM_OF_MID_EXAMS])!= TRUE)
-//		{
-//			raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
-//			freeFilesList(files);
-//			return NULL;
-//		}
-//	}
-//	//------------------------------------------------------//
-//	//		END REPLACE WITH THREAD                         //
-//	//------------------------------------------------------//
-//	initStudentStruct(hw_grades_list, mid_grades_list, final_grades_list, &student_grades_struct);
-//
-//	analyzeStudent(&student_grades_struct);
-//
-//	printToFile(argv[1], student_grades_struct.final_course_grade);
-//
-//	freeFilesList(files);
-//
-//	return 0;
-//}

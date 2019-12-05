@@ -2,7 +2,7 @@
 #include <math.h>
 
 
-void copy_arr(int *src, int *dst, int n)
+void copyArr(int *src, int *dst, int n)
 {
 	for (int i = 0; i < n; i++)
 		dst[i] = src[i];
@@ -221,9 +221,9 @@ char** initGradesList(char *user_path)
 
 void initStudentStruct(int *hw_grades_list, int *mid_grades_list, int *final_grades_list, student_grades_struct *student)
 {
-	copy_arr(hw_grades_list, student->hw_grades_arr, NUM_OF_HW);
-	copy_arr(mid_grades_list, student->mid_term_grades_arr, NUM_OF_MID_EXAMS);
-	copy_arr(final_grades_list, student->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
+	copyArr(hw_grades_list, student->hw_grades_arr, NUM_OF_HW);
+	copyArr(mid_grades_list, student->mid_term_grades_arr, NUM_OF_MID_EXAMS);
+	copyArr(final_grades_list, student->final_exam_grades_arr, NUM_OF_FINAL_EXAMS);
 	student->final_course_grade = 0;
 
 }

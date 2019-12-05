@@ -6,6 +6,8 @@
 
 int readGradeFile(char filename[], int *grade);
 
+DWORD WINAPI readGradeFileThread(LPVOID lpParam);
+
 char* getFilePath(const char dir_path[], const char file_name[]);
 
 void freeFilesList(char **files);

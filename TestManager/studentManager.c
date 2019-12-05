@@ -40,9 +40,9 @@ int manager(char *dir_path) {
 			break;
 		}
 		//===========================================================
-		//return_value1 = CreateProcessSimpleMain(cmd, ids_lst[idx]);
+		return_value1 = CreateProcessSimpleMain(cmd, ids_lst[idx]);
 		//===========================================================
-		return_value1 = TRUE;
+		//return_value1 = TRUE;  for testing
 		// Checks that return values are OK 
 		// There was an External Fatal Error with the process creation
 		if (return_value1 == ERR) {

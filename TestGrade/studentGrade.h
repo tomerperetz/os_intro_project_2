@@ -9,7 +9,7 @@ typedef struct student_grades_s
 	int final_course_grade;
 } student_grades_struct;
 
-void copy_arr(int *src, int *dst, int n);
+void copyArr(int *src, int *dst, int n);
 int sortGrades(int *scores_list, int elements_number);
 void printGradesArr(int *grades_list, int n);
 int getGradesAvg(int *sorted_grades_list, int desired_elements_number, int min_th, int *avg_ptr);

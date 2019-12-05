@@ -1,5 +1,6 @@
 #include "lib_fileHandler.h"
 #include "lib_str_func.h"
+#include "lib_osHandler.h"
 
 int readGradeFile(char filename[], int *grade)
 {
@@ -27,6 +28,55 @@ int readGradeFile(char filename[], int *grade)
 
 	return TRUE;
 }
+
+DWORD WINAPI readGradeFileThread(LPVOID lpParam)
+{
+	Sleep(10);
+
+	/*
+	Description: Read grade from grades file txt
+	parameters:
+			- char *filename - file string
+			- int *grade - pointer to grade variable
+	Returns: IS_TRUE if succeded, IS_FALSE o.w
+	*/
+
+	FILE *fp = NULL;
+	STUDENT_GRADE_TREAD_params_t *p_params;
+
+
+	/* Check if lpParam is NULL */
+	if (NULL == lpParam)
+	{
+		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+		printf("Recived null pointer");
+		return ERR;
+	}
+
+	p_params = (STUDENT_GRADE_TREAD_params_t *)lpParam;
+	
+
+	if (fopen_s(&fp, *(p_params->cur_file), "r") != FALSE)
+	{
+		/*open file failed! RaiseError*/
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
+		printf("File: %s\n", *(p_params->cur_file));
+		return ERR;
+	}
+	/*read first line to grade variable*/
+	fscanf_s(fp, "%d", p_params->cur_grade);
+
+	if (fclose(fp) != IS_FALSE)
+	{
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
+		printf("error closing file: %s\n", *(p_params->cur_file));
+		return ERR;
+	}
+
+
+	return STUDENT_GRADE_TREAD__CODE_SUCCESS;
+}
+
 
 char* getFilePath(const char dir_path[], const char file_name[])
 {

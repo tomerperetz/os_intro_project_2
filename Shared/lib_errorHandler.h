@@ -38,6 +38,8 @@ static const char ERROR_ID_4_MEM_ALLOCATE[100] = \
 "Terminating brutally!\n";
 static const char ERROR_ID_5_STRING_H[100] = \
 "STRLIB ERROR: Use of one of the functions from the <string.h> directory failed\n";
+static const char ERROR_ID_6_THREADS[100] = \
+"THREADS ERROR: Error accoured in threads creating function. please restart the program.\n";
 
 
 void raiseError(int error_id, const char *file_path, const char *function_name, int line, const char *description);
