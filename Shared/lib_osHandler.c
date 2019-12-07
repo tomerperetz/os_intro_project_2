@@ -12,15 +12,16 @@ Operation System functions: Proccesses and Threads.
 
 // Defines --------------------------------------------------------------------
 
-/*
-	Description: Wrapper for th CreateProccess func
-	parameters:
-			 - char *command : cmd command. 
-			 - char *id : student id
-	Return: True if everything was OK
-*/
+
 int CreateProcessSimpleMain(char *command, char *id)
 {
+	/*
+	Description: Wrapper for th CreateProccess func
+	parameters:
+			 - char *command : cmd command.
+			 - char *id : student id
+	Return: True if everything was OK
+	*/
 	PROCESS_INFORMATION procinfo;
 	DWORD				waitcode;
 	DWORD				exitcode;
