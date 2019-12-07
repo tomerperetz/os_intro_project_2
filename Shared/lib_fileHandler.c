@@ -63,7 +63,7 @@ DWORD WINAPI readGradeFileThread(LPVOID lpParam)
 	{
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 		printf("Recived null pointer");
-		return ERR;
+		return STUDENT_GRADE_TREAD__CODE_NULL_PTR;
 	}
 
 	p_params = (STUDENT_GRADE_TREAD_params_t *)lpParam;
@@ -74,7 +74,7 @@ DWORD WINAPI readGradeFileThread(LPVOID lpParam)
 		/*open file failed! RaiseError*/
 		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 		printf("File: %s\n", *(p_params->cur_file));
-		return ERR;
+		return STUDENT_GRADE_TREAD__CODE_NULL_PTR;
 	}
 	/*read first line to grade variable*/
 	fscanf_s(fp, "%d", p_params->cur_grade);
@@ -83,7 +83,7 @@ DWORD WINAPI readGradeFileThread(LPVOID lpParam)
 	{
 		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
 		printf("error closing file: %s\n", *(p_params->cur_file));
-		return ERR;
+		return STUDENT_GRADE_TREAD__CODE_NULL_PTR;
 	}
 
 
@@ -175,8 +175,13 @@ int printToFile(char *user_path, int final_grade)
 	}
 
 	fprintf_s(fp, "%d", final_grade);
-	fclose(fp);
-
+	if (fclose(fp) != FALSE) {
+		str_safe_free(file_no_prefix);
+		str_safe_free(filename);
+		str_safe_free(output_path);
+		raiseError(2, __FILE__, __func__, __LINE__, ERROR_ID_2_IO);
+		return ERR;
+	}
 	str_safe_free(file_no_prefix);
 	str_safe_free(filename);
 	str_safe_free(output_path);

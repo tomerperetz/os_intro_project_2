@@ -11,10 +11,13 @@ Operation System functions: Proccesses and Threads.
 #include "lib_fileHandler.h"
 
 // Defines --------------------------------------------------------------------
-#define SUCCESS_CODE 0
 
-/**
-* Demonstrates win32 process creation and termination.
+/*
+	Description: Wrapper for th CreateProccess func
+	parameters:
+			 - char *command : cmd command. 
+			 - char *id : student id
+	Return: True if everything was OK
 */
 int CreateProcessSimpleMain(char *command, char *id)
 {
@@ -46,8 +49,8 @@ int CreateProcessSimpleMain(char *command, char *id)
 			break;
 		case WAIT_FAILED:
 			errorMessageID = GetLastError();
-			raiseError(12, __FILE__, __func__, __LINE__, "RunTimeError: The Process wait has been faild!\nError code:");
 			printf("%d\n", errorMessageID);
+			raiseError(12, __FILE__, __func__, __LINE__, "RunTimeError: The Process wait has been faild!\nError code:");
 			break;
 		case WAIT_ABANDONED:
 			raiseError(13, __FILE__, __func__, __LINE__, "RunTimeError: The specified object is a mutex object that was not released by the thread that owned the mutex object before the owning thread terminated!\n");
@@ -57,7 +60,7 @@ int CreateProcessSimpleMain(char *command, char *id)
 			break;
 		default:
 			raiseError(14, __FILE__, __func__, __LINE__, "RunTimeError: wait code has an unknwon value!\n");
-			printf("waitcode value:  0x%x", waitcode);
+			printf("waitcode value:  0x%x\n", waitcode);
 			break;
 	}
 	if (return_value == ERR) /* Process is still alive */
@@ -69,7 +72,7 @@ int CreateProcessSimpleMain(char *command, char *id)
 
 	retVal = GetExitCodeProcess(procinfo.hProcess, &exitcode);
 	if (exitcode != 0) {
-		printf("Captain, were unable to calculate %s", id);
+		printf("Captain, were unable to calculate %s\n", id);
 		return IS_FALSE;
 	}
 	if (retVal == 0)
@@ -113,9 +116,17 @@ BOOL CreateProcessSimple(LPTSTR CommandLine, PROCESS_INFORMATION *ProcessInfoPtr
 
 void freeThreadParamMem(STUDENT_GRADE_TREAD_params_t **p_thread_params_arr)
 {
+	/*
+	Description: frees all allocated memory
+	parameters:
+			 - STUDENT_GRADE_TREAD_params_t **p_thread_params_arr - array of pointers.
+	Return:
+	*/
 	for (int i = 0; i < MAX_FILES; i++)
-		free(p_thread_params_arr[i]);
-	free(p_thread_params_arr);
+		if (p_thread_params_arr[i] != NULL)
+			free(p_thread_params_arr[i]);
+	if (p_thread_params_arr != NULL)
+		free(p_thread_params_arr);
 }
 
 int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
@@ -127,34 +138,42 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 			 -  int *grades_list - empty grades array.
 	Return: TRUE if succeded, ERR o.w
 	*/
-
 	HANDLE p_thread_handles[MAX_FILES];
 	DWORD p_thread_ids[MAX_FILES];
 	DWORD num_of_threads = MAX_FILES;
 	DWORD wait_code;
 	DWORD exit_code;
+	DWORD errorMessageID;
 	BOOL ret_val;
 	STUDENT_GRADE_TREAD_params_t **p_thread_params_arr;
-
+	int retVal1 = ERR;
 	/*
 		Allocate memory for thread parameters
 		args array for threads function 
 	*/
-	
 	p_thread_params_arr = (STUDENT_GRADE_TREAD_params_t **)malloc(MAX_FILES*sizeof(p_thread_params_arr));
+	// Checks if the allocation was successful
 	if (NULL == p_thread_params_arr)
 	{
 		raiseError(4, __FILE__, __func__, __LINE__, ERROR_ID_4_MEM_ALLOCATE);
-		printf("Error when allocating memory");
+		printf("Error when allocating memory\n");
 		return ERR;
 	}
+	// Initialize array to NULL;
+	for (int i = 0; i < MAX_FILES; i++)
+	{
+		p_thread_handles[i] = NULL;
+		p_thread_params_arr[i] = NULL;
+	}
+	// Allocates memory for all p_thread_params_arr elements
 	for (int i = 0; i < MAX_FILES; i++)
 	{
 		p_thread_params_arr[i] = (STUDENT_GRADE_TREAD_params_t *)malloc(sizeof(STUDENT_GRADE_TREAD_params_t));
 		if (NULL == p_thread_params_arr[i])
 		{
+			freeThreadParamMem(p_thread_params_arr);
 			raiseError(4, __FILE__, __func__, __LINE__, ERROR_ID_4_MEM_ALLOCATE);
-			printf("Error when allocating memory");
+			printf("Error when allocating memory\n");
 			return ERR;
 		}
 	}
@@ -170,6 +189,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 		{
 			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 			printf("details: Error when creating thread\n");
+			closeHandles(p_thread_handles, MAX_FILES);
 			freeThreadParamMem(p_thread_params_arr);
 			return ERR;
 		}
@@ -182,46 +202,36 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 	/* WAIT CODE cases*/
 	switch (wait_code)
 	{
-	
-	case WAIT_TIMEOUT:
-	{
-		raiseError(6, __FILE__, __func__, __LINE__ ,ERROR_ID_6_THREADS);
-		printf("details: Timeout error when waiting\n");
-		freeThreadParamMem(p_thread_params_arr);
-		return ERR;
+		case WAIT_TIMEOUT:
+			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+			printf("details: Timeout error when waiting\n");
+			break;
+		case WAIT_FAILED:
+			errorMessageID = GetLastError();
+			printf("%d\n", errorMessageID);
+			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+			printf("details: Timeout error when waiting\n");
+			break;
+		case WAIT_OBJECT_0:
+			retVal1 = TRUE;
+			break;
+		case WAIT_ABANDONED_0:
+			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+			printf("details: WAIT ANDONED\n");
+			break;
 	}
-	
-	case WAIT_FAILED:
-	{
-		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
-		printf("details: Timeout error when waiting\n");
-		freeThreadParamMem(p_thread_params_arr);
-		return ERR;
+	// special case that also allowed
+	if (wait_code >= WAIT_OBJECT_0 && wait_code <= WAIT_OBJECT_0 + MAX_FILES - 1) {
+		retVal1 = TRUE;
 	}
-	
-	case WAIT_ABANDONED_0:
-	{
-		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
-		printf("details: WAIT ANDONED\n");
-		freeThreadParamMem(p_thread_params_arr);
-		return ERR;
-	}
-	default:
-		break;
-	}
-
-	/* Any other case*/
-	if (WAIT_OBJECT_0 != wait_code)
-	{
-		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
-		printf("details: Error when waiting. wait code: %d\n", wait_code);
-		freeThreadParamMem(p_thread_params_arr);
-		return ERR;
-	}
-
-	/* Free memory */
+		
+	/* Free all allocated memory */
 	freeThreadParamMem(p_thread_params_arr);
-
+	// Checks if the wait code was WAIT_OBJECT_0, 
+	if (retVal1 == ERR) {
+		closeHandles(p_thread_handles, MAX_FILES);
+		return ERR;
+	}
 	/* Check the DWORD returned by readGradeFileThread */
 	for (int i = 0; i < MAX_FILES; i++)
 	{
@@ -230,33 +240,57 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 		{
 			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 			printf("details: Error getting thread exit code\n");
+			closeHandles(p_thread_handles, MAX_FILES);
 			return ERR;
 		}
-
-		if (exit_code == ERR) 
+		// checks exit code
+		if (exit_code == STUDENT_GRADE_TREAD__CODE_NULL_PTR)
 		{
 			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 			printf("Error in thread: %d. Exit code: %d\n", i, exit_code);
+			closeHandles(p_thread_handles, MAX_FILES);
 			return ERR;
 		}
-
-		if (SUCCESS_CODE != exit_code)
+		if (exit_code != STUDENT_GRADE_TREAD__CODE_SUCCESS)
 		{
 			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 			printf("Details: Error in thread: %d. Exit code: %d\n", i, exit_code);
+			closeHandles(p_thread_handles, MAX_FILES);
+			return ERR;
 		}
-
-
 		/* Close thread handle */
 		ret_val = CloseHandle(p_thread_handles[i]);
+		p_thread_handles[i] = NULL;
 		if (FALSE == ret_val)
 		{
 			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 			printf("Details: Error when closing thread\n");
+			closeHandles(p_thread_handles, MAX_FILES);
 			return ERR;
 		}
 	}
-	return STUDENT_GRADE_TREAD__CODE_SUCCESS;
+	return TRUE;
+}
+
+int closeHandles(const HANDLE *p_thread_handles, int size) {
+	/*
+	Description: create thread with arg wrapper
+	parameters:
+			- HANDLE *p_thread_handles - array of handles
+			- int size - size of handles araay
+	Return: true if all the handles closed safly 
+	*/
+	int idx = 0, retVal = TRUE;
+	for (idx = 0; idx < size; idx++) {
+		if (p_thread_handles[idx] != NULL) {
+			if (CloseHandle(p_thread_handles[idx]) == FALSE) {
+				raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
+				printf("Details: Error when closing thread\n");
+				retVal = FALSE;
+			}
+		}
+	}
+	return retVal;
 }
 
 

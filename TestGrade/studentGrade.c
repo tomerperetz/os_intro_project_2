@@ -294,7 +294,7 @@ int getAllStudentGrades(char *dir_path, int grades_list[])
 	}
 
 	/* Load grades to grades array using threads */
-	if (mainCreateReadGradesThreadSimple(files_list, grades_list) != STUDENT_GRADE_TREAD__CODE_SUCCESS)
+	if (mainCreateReadGradesThreadSimple(files_list, grades_list) != TRUE)
 	{
 		freeFileList(files_list);
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);

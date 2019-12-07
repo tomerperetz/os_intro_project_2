@@ -61,7 +61,6 @@ int manager(char *dir_path)
 		//===========================================================
 		return_value1 = CreateProcessSimpleMain(cmd, ids_lst[idx]);
 		//===========================================================
-		//return_value1 = TRUE;  for testing
 		// Checks that return values are OK 
 		// There was an External Fatal Error with the process creation
 		if (return_value1 == ERR) {
@@ -74,6 +73,7 @@ int manager(char *dir_path)
 			str_safe_free(cmd);
 			cmd = NULL;
 			student_grade_path = NULL;
+			return_value = ERR;
 			continue;
 		}
 		

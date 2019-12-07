@@ -45,3 +45,4 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list);
 static HANDLE CreateThreadSimple(LPTHREAD_START_ROUTINE p_start_routine,
 	LPVOID p_thread_parameters,
 	LPDWORD p_thread_id);
+int closeHandles(const HANDLE *p_thread_handles, int size);
