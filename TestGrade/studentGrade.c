@@ -257,7 +257,8 @@ void freeFileList(char **files_list)
 	*/
 	for (int idx = 0; idx < TOT_NUM_OF_FILES; idx++)
 	{
-		free(files_list[idx]);
+		if (files_list[idx] != NULL)
+			free(files_list[idx]);
 	}
 }
 
@@ -277,11 +278,17 @@ int getAllStudentGrades(char *dir_path, int grades_list[])
 	int idx = 0, grade = -1;
 	char *files_list[TOT_NUM_OF_FILES];
 
+	// intialize to NULL
+	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++)
+	{
+		files_list[idx] = NULL;
+	}
 	/* Create file list array */
 	for (idx = 0; idx < TOT_NUM_OF_FILES; idx++)
 	{
 		if (strcatDynamic(dir_path, file_names[idx], &files_list[idx]) == FALSE)
 		{
+			freeFileList(files_list);
 			return ERR;
 		}
 	}

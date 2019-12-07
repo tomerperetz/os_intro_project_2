@@ -24,6 +24,7 @@ int CreateProcessSimpleMain(char *command, char *id)
 	BOOL				retVal;
 	DWORD				errorMessageID;
 	int					return_value = ERR;
+	int					retVal2 = 0;
 	retVal = CreateProcessSimple(command, &procinfo);
 
 
@@ -77,8 +78,12 @@ int CreateProcessSimpleMain(char *command, char *id)
 		return ERR;
 	}
 
-	CloseHandle(procinfo.hProcess); /* Closing the handle to the process */
-	CloseHandle(procinfo.hThread); /* Closing the handle to the main thread of the process */
+	retVal = CloseHandle(procinfo.hProcess); /* Closing the handle to the process */
+	retVal2 = CloseHandle(procinfo.hThread); /* Closing the handle to the main thread of the process */
+	if (retVal == 0 || retVal2 == 0) {
+		raiseError(10, __FILE__, __func__, __LINE__, "OS ERROR: The program failed to close the Handle!\n");
+		return ERR;
+	}
 	return IS_TRUE;
 }
 
@@ -153,9 +158,6 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 			return ERR;
 		}
 	}
-
-
-
 	/* Create thread */
 	for (int i = 0; i < MAX_FILES; i++)
 	{
@@ -168,6 +170,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 		{
 			raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 			printf("details: Error when creating thread\n");
+			freeThreadParamMem(p_thread_params_arr);
 			return ERR;
 		}
 	}
@@ -252,13 +255,7 @@ int mainCreateReadGradesThreadSimple(char **files_list, int *grades_list)
 			printf("Details: Error when closing thread\n");
 			return ERR;
 		}
-
-
 	}
-
-
-	
-
 	return STUDENT_GRADE_TREAD__CODE_SUCCESS;
 }
 
@@ -283,7 +280,7 @@ static HANDLE CreateThreadSimple(LPTHREAD_START_ROUTINE p_start_routine,
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 		printf("Details: Error when creating a thread");
 		printf("\tReceived null pointer");
-		exit(ERR);
+		return NULL;
 	}
 
 	if (NULL == p_thread_id)
@@ -291,7 +288,7 @@ static HANDLE CreateThreadSimple(LPTHREAD_START_ROUTINE p_start_routine,
 		raiseError(6, __FILE__, __func__, __LINE__, ERROR_ID_6_THREADS);
 		printf("Details: Error when creating a thread");
 		printf("\tReceived null pointer");
-		exit(ERR);
+		return NULL;
 	}
 
 	thread_handle = CreateThread(
